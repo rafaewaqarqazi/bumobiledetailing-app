@@ -6,7 +6,7 @@
     "dev": "next dev",
     "start": "next start",
     "build": "GIT_SHA=$(git rev-parse HEAD) GIT_SHA_TS=$(git log -1 --format=%ai) next build",
-    "prod": "next start -p 5000",
+    "prod:intake": "next start -p 5005",
     "lint": "next lint"
   },
   "dependencies": {

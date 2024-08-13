@@ -1,0 +1,43 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Intake APP
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SSH_HOST}}
+          key: ${{secrets.SSH_KEY}}
+          username: root
+
+          script: |
+            cd /intake/intake-app
+            pm2 stop 'npm run prod'
+            git pull
+            npm i
+            free && sync && echo 3 > /proc/sys/vm/drop_caches && free
+            npm run build
+            pm2 restart 'npm run prod:intake'
+      - name: Check APP Status
+        uses: appleboy/ssh-action@master
+        env:
+          APP_URL: ${{secrets.APP_URL}}
+        with:
+          host: ${{secrets.SSH_HOST}}
+          key: ${{secrets.SSH_KEY}}
+          username: root
+          envs: APP_URL
+          script: |
+            sleep 10
+            if curl --fail $APP_URL/status; then
+              echo "Application is healthy."
+            else
+              echo "Application is not healthy."
+              pm2 stop 'npm run prod:intake'
+              exit 1
+            fi
