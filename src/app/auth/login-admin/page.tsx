@@ -1,6 +1,11 @@
 import React from "react";
 import LoginForm from "@/components/auth/LoginForm";
+import AuthRoutes from "@/components/routes/AuthRoutes";
 const AdminLoginPage = () => {
-  return <LoginForm userType="admin" />;
+  return (
+    <AuthRoutes>
+      <LoginForm userType="admin" />
+    </AuthRoutes>
+  );
 };
 export default AdminLoginPage;

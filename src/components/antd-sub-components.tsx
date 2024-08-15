@@ -1,6 +1,7 @@
-import { Form, Select, Typography } from "antd";
+import { Form, Layout, Select, Typography } from "antd";
 
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
 const { Item: FormItem } = Form;
-export { Title, Text, Paragraph, Option, FormItem };
+const { Sider: LayoutSider, Content: LayoutContent } = Layout;
+export { Title, Text, Paragraph, Option, FormItem, LayoutSider, LayoutContent };
