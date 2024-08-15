@@ -8,7 +8,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy Intake APP
+      - name: Deploy BU Mobile Detailing APP
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.SSH_HOST}}
@@ -16,13 +16,13 @@ jobs:
           username: root
 
           script: |
-            cd /intake/intake-app
-            pm2 stop 'npm run prod'
+            cd /bumd/bumd-app
+            pm2 stop 'npm run prod:bumd'
             git pull
             npm i
             free && sync && echo 3 > /proc/sys/vm/drop_caches && free
             npm run build
-            pm2 restart 'npm run prod:intake'
+            pm2 restart 'npm run prod:bumd'
       - name: Check APP Status
         uses: appleboy/ssh-action@master
         env:
@@ -38,6 +38,6 @@ jobs:
               echo "Application is healthy."
             else
               echo "Application is not healthy."
-              pm2 stop 'npm run prod:intake'
+              pm2 stop 'npm run prod:bumd'
               exit 1
             fi

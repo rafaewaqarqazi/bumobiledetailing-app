@@ -36,7 +36,7 @@ const LoginForm = ({
   return (
     <Card bordered={false} className="w-full !shadow-2xl rounded-2xl p-4 ">
       <Title level={3} className="text-center">
-        Login to Intake
+        Login to BU Mobile Detailing
       </Title>
       <Form
         form={form}

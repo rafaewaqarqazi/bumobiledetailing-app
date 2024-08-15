@@ -4,8 +4,8 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import React from "react";
 import StoreProvider from "@/app/StoreProvider";
 export const metadata: Metadata = {
-  title: "Intake",
-  description: "Intake app",
+  title: "BU Mobile Detailing",
+  description: "BU Mobile Detailing",
 };
 
 const RootLayout = ({ children }: React.PropsWithChildren) => (

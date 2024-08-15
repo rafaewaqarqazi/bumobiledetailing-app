@@ -1,12 +1,12 @@
 {
-  "name": "intake-app",
+  "name": "bumobiledetailing-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "start": "next start",
     "build": "GIT_SHA=$(git rev-parse HEAD) GIT_SHA_TS=$(git log -1 --format=%ai) next build",
-    "prod:intake": "next start -p 5005",
+    "prod:bumd": "next start -p 5005",
     "lint": "next lint"
   },
   "dependencies": {

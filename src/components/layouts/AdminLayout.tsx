@@ -53,7 +53,7 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
         className={`${!screen.sm ? "!fixed z-10 left-0 bottom-0 top-0" : ""}`}
       >
         <Title level={3} className=" text-center mt-3 mb-4">
-          {isOn ? "IN" : "Intake"}{" "}
+          {isOn ? "MD" : "BU Mobile Detailing"}{" "}
         </Title>
         {!screen.sm && !isOn && (
           <MenuFoldOutlined
