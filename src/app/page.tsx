@@ -1,10 +1,14 @@
-"use client";
-import { Typography } from "antd";
-const { Title } = Typography;
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Title>INTAKE APP</Title>
-    </main>
-  );
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import Main from "@/components/Main";
+import { redirect } from "next/navigation";
+import { Roles } from "@/utils/enums";
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+  console.log({ session });
+  if (session?.user?.role === Roles.ADMIN) {
+    return <Main />;
+  } else {
+    redirect("/auth/login");
+  }
 }
