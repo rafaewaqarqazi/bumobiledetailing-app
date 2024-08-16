@@ -4,9 +4,8 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/actions";
 import { Roles } from "@/utils/enums";
 import { redirect } from "next/navigation";
 
-const AdminRoutes = async ({ children }: React.PropsWithChildren) => {
+const AuthRoutes = async ({ children }: React.PropsWithChildren) => {
   const session = await getServerSession(authOptions);
-  console.log({ session });
   if (session && session?.user?.role === Roles.ADMIN) {
     redirect("/admin/dashboard");
   } else if (session && session?.user?.role === Roles.CUSTOMER) {
@@ -18,4 +17,4 @@ const AdminRoutes = async ({ children }: React.PropsWithChildren) => {
   }
 };
 
-export default AdminRoutes;
+export default AuthRoutes;

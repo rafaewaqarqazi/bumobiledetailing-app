@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 
 const AdminRoutes = async ({ children }: React.PropsWithChildren) => {
   const session = await getServerSession(authOptions);
-  console.log({ session });
   if (session?.user?.role === Roles.ADMIN) {
     return <> {children} </>;
   } else {

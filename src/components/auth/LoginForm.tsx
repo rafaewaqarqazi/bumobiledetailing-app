@@ -14,6 +14,8 @@ const LoginForm = ({
 }) => {
   const [form] = useForm();
   const router = useRouter();
+  const isAdmin = userType === "admin";
+  const isEmployee = userType === "employee";
   const [loading, setLoading] = useState(false);
   const onFinish = (values: any) => {
     setLoading(true);
@@ -35,7 +37,7 @@ const LoginForm = ({
   };
   return (
     <Card bordered={false} className="w-full !shadow-2xl rounded-2xl p-4 ">
-      <Title level={3} className="text-center">
+      <Title level={3} className="text-center !font-extrabold">
         Login to BU Mobile Detailing
       </Title>
       <Form
@@ -76,17 +78,22 @@ const LoginForm = ({
             <Checkbox>Remember me</Checkbox>
           </FormItem>
           <FormItem className="mb-0">
-            <Link href={`/forgot-password`} className="text-xs">
+            <Link
+              href={`/auth/forgot-password${isAdmin ? "?a=true" : isEmployee ? "?e=true" : ""}`}
+              className="text-xs"
+            >
               forgot password?
             </Link>
           </FormItem>
         </Space>
 
-        <FormItem className="mt-0 mb-4">
-          <Link href={`/signup`} className="text-xs">
-            {`Don't`} have an account?
-          </Link>
-        </FormItem>
+        {userType === "customer" && (
+          <FormItem className="mt-0 mb-4">
+            <Link href={`/auth/signup`} className="text-xs">
+              {`Don't`} have an account?
+            </Link>
+          </FormItem>
+        )}
         <Button
           type="primary"
           htmlType="submit"
