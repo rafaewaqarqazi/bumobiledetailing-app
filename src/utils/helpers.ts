@@ -32,3 +32,15 @@ export const Colors = {
   cardBgDark: "#E5F1F7",
   cardBgBlueish: "#D6EAF3",
 };
+export const showTotal = (total: number, range: [number, number]) =>
+  `${range[0]}-${range[1]} of ${total} items`;
+export const dateFormat = "MM-DD-YYYY";
+
+export const currencyFormatter = Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 2,
+  style: "currency",
+  currency: "USD",
+});
+export const numberFormatter = Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 2,
+});

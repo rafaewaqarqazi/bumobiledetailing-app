@@ -3,10 +3,10 @@ import { Card, Flex, Form } from "antd";
 import { Title } from "@/components/antd-sub-components";
 import Image from "next/image";
 
-const GetStartedService = ({ next }: { next: () => void }) => {
+const GetStartedPackage = ({ next }: { next: () => void }) => {
   const form = Form.useFormInstance();
-  const onClick = (service: string) => () => {
-    form.setFieldValue("service", service);
+  const onClick = (_package: string) => () => {
+    form.setFieldValue("package", _package);
     next();
   };
   return (
@@ -16,7 +16,7 @@ const GetStartedService = ({ next }: { next: () => void }) => {
         onClick={onClick("full-detail")}
       >
         <Image
-          src="/images/service/full-detail.png"
+          src="/images/package/full-detail.png"
           alt="coupe"
           width={120}
           height={120}
@@ -34,7 +34,7 @@ const GetStartedService = ({ next }: { next: () => void }) => {
         onClick={onClick("interior")}
       >
         <Image
-          src="/images/service/interior.png"
+          src="/images/package/interior.png"
           alt="sedan"
           width={120}
           height={120}
@@ -52,7 +52,7 @@ const GetStartedService = ({ next }: { next: () => void }) => {
         onClick={onClick("exterior")}
       >
         <Image
-          src="/images/service/exterior.png"
+          src="/images/package/exterior.png"
           alt="suv"
           width={120}
           height={120}
@@ -69,4 +69,4 @@ const GetStartedService = ({ next }: { next: () => void }) => {
   );
 };
 
-export default GetStartedService;
+export default GetStartedPackage;

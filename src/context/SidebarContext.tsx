@@ -26,7 +26,7 @@ export const SidebarProvider = ({ children }: React.PropsWithChildren) => {
     } else {
       value.setToggle(false);
     }
-  }, [screen.md, value]);
+  }, [screen.md]);
   return (
     <SidebarContext.Provider value={value}>
       {useMemo(() => children, [children])}

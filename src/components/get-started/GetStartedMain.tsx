@@ -5,13 +5,13 @@ import { FormItem, Title } from "@/components/antd-sub-components";
 import GetStartedBookAppointment from "@/components/get-started/GetStarted.BookAppointment";
 import { ICustomer } from "@/utils/crud/customer.crud";
 import GetStartedSize from "@/components/get-started/GetStarted.Size";
-import GetStartedService from "@/components/get-started/GetStarted.Service";
+import GetStartedPackage from "@/components/get-started/GetStarted.Package";
 
 const GetStartedMain = () => {
   const [form] = Form.useForm();
   const [step, setStep] = useState(2);
   const [customer, setCustomer] = useState<ICustomer | null>(null);
-  const service = Form.useWatch("service", form);
+  const service = Form.useWatch("package", form);
   const onClickStep = (step: number) => () => {
     setStep(step);
   };
@@ -34,7 +34,7 @@ const GetStartedMain = () => {
     }
     if (step >= 3) {
       items.push({
-        title: "Service",
+        title: "Package",
         onClick: onClickStep(3),
         className: "cursor-pointer",
       });
@@ -55,7 +55,7 @@ const GetStartedMain = () => {
       case 2:
         return "Select Size";
       case 3:
-        return "Select Service";
+        return "Select Package";
       default:
         return "Book Appointment";
     }
@@ -78,8 +78,8 @@ const GetStartedMain = () => {
         <FormItem name="size" className={`${step !== 2 ? "hidden" : ""}`}>
           <GetStartedSize next={next} />
         </FormItem>
-        <FormItem name="service" className={`${step !== 3 ? "hidden" : ""}`}>
-          <GetStartedService next={next} />
+        <FormItem name="package" className={`${step !== 3 ? "hidden" : ""}`}>
+          <GetStartedPackage next={next} />
         </FormItem>
       </Form>
     </Card>

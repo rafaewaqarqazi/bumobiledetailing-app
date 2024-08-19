@@ -9,6 +9,7 @@ import axios from "axios";
 import { ConfigProvider } from "antd";
 import { Colors } from "@/utils/helpers";
 import { componentsTheme, tokenTheme } from "@/utils/theme";
+import { SidebarProvider } from "@/context/SidebarContext";
 axios.defaults.baseURL = environment.apiURL;
 setupAxios(axios, store);
 export default function StoreProvider({
@@ -32,13 +33,17 @@ export default function StoreProvider({
         ...componentsTheme,
       }}
     >
-      <Provider store={store}>
-        {persistorRef.current ? (
-          <PersistGate persistor={persistorRef.current}>{children}</PersistGate>
-        ) : (
-          children
-        )}
-      </Provider>
+      <SidebarProvider>
+        <Provider store={store}>
+          {persistorRef.current ? (
+            <PersistGate persistor={persistorRef.current}>
+              {children}
+            </PersistGate>
+          ) : (
+            children
+          )}
+        </Provider>
+      </SidebarProvider>
     </ConfigProvider>
   );
 }
