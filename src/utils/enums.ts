@@ -3,3 +3,7 @@ export enum Roles {
   CUSTOMER,
   EMPLOYEE,
 }
+export enum PreferencesTypes {
+  EMAIL = "email",
+  SMS = "sms",
+}

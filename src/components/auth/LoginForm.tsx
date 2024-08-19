@@ -37,7 +37,7 @@ const LoginForm = ({
   };
   return (
     <Card bordered={false} className="w-full !shadow-2xl rounded-2xl p-4 ">
-      <Title level={3} className="text-center !font-extrabold">
+      <Title level={3} className="text-center !font-extrabold !mt-0">
         Login to BU Mobile Detailing
       </Title>
       <Form

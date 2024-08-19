@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import "src/assets/styles/places-autocomplete";
 
 html,body{
   margin: 0;

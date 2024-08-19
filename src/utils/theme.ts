@@ -15,10 +15,7 @@ export const tokenTheme = {
   colorError: Colors.danger2,
 };
 const InputTheme = {
-  borderRadiusLG: 16,
-  borderRadius: 16,
   colorTextPlaceholder: Colors.inputPlaceholder,
-  colorBgContainer: Colors.inputBg,
   lineWidth: 1,
   controlPaddingHorizontal: 24,
   controlHeightLG: 48,
@@ -27,8 +24,7 @@ const InputTheme = {
 export const componentsTheme: ThemeConfig = {
   components: {
     Button: {
-      borderRadiusLG: 16,
-      borderRadius: 16,
+      borderRadiusLG: 50,
       fontWeight: 500,
       primaryShadow: "none",
       controlHeightLG: 48,

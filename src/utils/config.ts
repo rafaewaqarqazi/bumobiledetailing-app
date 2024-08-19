@@ -7,11 +7,13 @@ interface IEnvironment {
   apiURL: string;
   appURL: string;
   DEV: boolean;
+  googlePlacesKey?: string;
 }
 export const environment: IEnvironment = {
   apiURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:4005/api",
   appURL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
   DEV: process.env.NEXT_PUBLIC_NODE_ENV === "development",
+  googlePlacesKey: process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY,
 };
 export default function setupAxios(axios: Axios, store: AppStore) {
   axios.defaults.headers.common.Accept = "application/json";
