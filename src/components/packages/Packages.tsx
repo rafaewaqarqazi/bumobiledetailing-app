@@ -10,6 +10,7 @@ import {
   Modal,
   Space,
   Table,
+  TableColumnsType,
 } from "antd";
 import { useInputSearch } from "@/hooks/input.search.hooks";
 import {
@@ -28,7 +29,7 @@ import {
 import { Paragraph } from "@/components/antd-sub-components";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { packageCrud } from "@/utils/crud/package.crud";
+import { IPackageAddOn, packageCrud } from "@/utils/crud/package.crud";
 
 const Packages = () => {
   const [pagination, setPagination] = useState({
@@ -82,12 +83,18 @@ const Packages = () => {
         render: (price: number) => currencyFormatter.format(price),
       },
       {
+        title: "AddOns",
+        dataIndex: "packageAddOns",
+        render: (packageAddOns: IPackageAddOn[]) => packageAddOns?.length,
+      },
+      {
         title: "Created At",
         dataIndex: "createdAt",
         render: (date: string) => dayjs(date).format(dateFormat),
       },
       {
         title: "Actions",
+        align: "right",
         render: (record: any) => (
           <Dropdown
             menu={{
@@ -95,7 +102,7 @@ const Packages = () => {
                 {
                   key: "edit",
                   label: (
-                    <Link href={`/admin/packages/${record.id}`}>Edit</Link>
+                    <Link href={`/admin/packages/edit/${record.id}`}>Edit</Link>
                   ),
                   icon: <EditOutlined />,
                 },
@@ -139,7 +146,7 @@ const Packages = () => {
         <Table
           loading={loading}
           dataSource={packages}
-          columns={columns}
+          columns={columns as TableColumnsType}
           pagination={{
             ...pagination,
             showTotal: showTotal,

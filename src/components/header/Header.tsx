@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { useSidebarContext } from "@/context/SidebarContext";
 import { authActions } from "@/lib/features/authSlice";
+import { signOut } from "next-auth/react";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,9 @@ const Header = () => {
     token: { colorBgContainer },
   } = theme.useToken();
   const handleLogout = () => {
-    dispatch(authActions.logout());
+    signOut().then(() => {
+      dispatch(authActions.logout());
+    });
   };
   return (
     <Layout.Header style={{ padding: 0, background: colorBgContainer }}>

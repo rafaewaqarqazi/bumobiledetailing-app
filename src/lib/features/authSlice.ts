@@ -44,7 +44,7 @@ const authSlice = createSlice({
 });
 export const authActions = authSlice.actions;
 export const authReducer = persistReducer(
-  { storage, key: "auth", whitelist: ["auth"] },
+  { storage, key: "auth", whitelist: ["auth", "token"] },
   authSlice.reducer,
 );
 export const authSaga = function* () {

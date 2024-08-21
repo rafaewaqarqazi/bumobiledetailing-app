@@ -1,6 +1,8 @@
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { environment } from "@/utils/config";
+import { store } from "@/lib/store";
+import { authActions } from "@/lib/features/authSlice";
 export const authOptions = {
   providers: [
     CredentialsProvider({
@@ -36,6 +38,7 @@ export const authOptions = {
           }
           const user = await res.json();
           if (user?.data) {
+            store.dispatch(authActions.login(user?.data));
             return user?.data;
           } else {
             return null;

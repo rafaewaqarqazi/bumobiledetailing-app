@@ -7,8 +7,6 @@ const plus_jakarta_sans = Plus_Jakarta_Sans({
   display: "swap",
 });
 export const tokenTheme = {
-  colorBorder: Colors.border,
-  colorBorderSecondary: Colors.border,
   colorText: Colors.colorText,
   colorTextTertiary: Colors.colorTextSecondary,
   fontFamily: plus_jakarta_sans.style.fontFamily,
@@ -17,14 +15,14 @@ export const tokenTheme = {
 const InputTheme = {
   colorTextPlaceholder: Colors.inputPlaceholder,
   lineWidth: 1,
-  controlPaddingHorizontal: 24,
+  controlPaddingHorizontal: 16,
   controlHeightLG: 48,
   activeShadow: "none",
 };
 export const componentsTheme: ThemeConfig = {
   components: {
     Button: {
-      borderRadiusLG: 50,
+      borderRadiusLG: 8,
       fontWeight: 500,
       primaryShadow: "none",
       controlHeightLG: 48,
@@ -34,7 +32,6 @@ export const componentsTheme: ThemeConfig = {
     Select: InputTheme,
     DatePicker: InputTheme,
     Card: {
-      colorBorder: Colors.border,
       borderRadiusLG: 16,
     },
     Layout: {
@@ -48,6 +45,9 @@ export const componentsTheme: ThemeConfig = {
       radioSize: 20,
       dotSize: 10,
       colorBorder: Colors.colorText,
+    },
+    Form: {
+      labelColor: Colors.colorText,
     },
   },
 };

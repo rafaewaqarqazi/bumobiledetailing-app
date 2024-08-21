@@ -10,3 +10,10 @@ export function useToggle(defaultIsOn = false) {
     [isOn, toggleOn, toggleOff, toggle, setToggle],
   );
 }
+
+export interface IHooksList {
+  setPagination?: (pagination: any) => void;
+  current?: number;
+  pageSize?: number;
+  total?: number;
+}

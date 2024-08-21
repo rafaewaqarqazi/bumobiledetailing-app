@@ -27,7 +27,6 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
   const screen = useBreakpoint();
   const { isOn, toggleOn } = useSidebarContext();
   const pathname = usePathname();
-  const [selectedKey, setSelectedKey] = useState("dashboard");
   const items = useMemo(
     () => [
       {
@@ -36,8 +35,24 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
         icon: <DashboardOutlined />,
       },
       {
+        key: "services",
+        label: <Link href="/admin/services">Services</Link>,
+        icon: <BoxPlotOutlined />,
+      },
+      {
         key: "package",
         label: <Link href="/admin/packages">Packages</Link>,
+        icon: <BoxPlotOutlined />,
+      },
+
+      {
+        key: "addons",
+        label: <Link href="/admin/addons">AddOns</Link>,
+        icon: <BoxPlotOutlined />,
+      },
+      {
+        key: "addon-categories",
+        label: <Link href="/admin/addon-categories">AddOn Categories</Link>,
         icon: <BoxPlotOutlined />,
       },
       {
@@ -53,6 +68,9 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
     ],
     [],
   );
+  const item = items.find((item) => pathname.includes(item.key));
+  const [selectedKey, setSelectedKey] = useState(item?.key || "dashboard");
+
   useEffect(() => {
     const item = items.find((item) => pathname.includes(item.key));
     if (item) {
