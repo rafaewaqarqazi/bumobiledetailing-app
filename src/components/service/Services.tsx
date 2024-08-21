@@ -24,7 +24,8 @@ import { dateFormat, getErrorMsg, showTotal } from "@/utils/helpers";
 import { Paragraph } from "@/components/antd-sub-components";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { serviceCrud } from "@/utils/crud/service.crud";
+import { IService, serviceCrud } from "@/utils/crud/service.crud";
+import Image from "next/image";
 
 const Services = () => {
   const [pagination, setPagination] = useState({
@@ -59,6 +60,18 @@ const Services = () => {
   };
   const columns = useMemo(
     () => [
+      {
+        title: "Icon",
+        render: (data: IService) => (
+          <Image
+            src={data.image}
+            alt={data.name}
+            width={40}
+            height={40}
+            className="rounded"
+          />
+        ),
+      },
       {
         title: "Name",
         dataIndex: "name",

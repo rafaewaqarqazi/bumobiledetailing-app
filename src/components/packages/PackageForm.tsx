@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Form, Input, message, Row, Select } from "antd";
+import { Button, Card, Form, Input, message, Row, Select, Switch } from "antd";
 import { usePackage } from "@/hooks/package.hooks";
 import { FormItem, Option, TextArea } from "@/components/antd-sub-components";
 import { useAddOns } from "@/hooks/addOns.hooks";
@@ -71,6 +71,18 @@ const PackageForm = () => {
           <Input />
         </FormItem>
         <FormItem
+          name="displayName"
+          label="Display Name"
+          rules={[
+            {
+              required: true,
+              message: "Please enter package display name",
+            },
+          ]}
+        >
+          <Input />
+        </FormItem>
+        <FormItem
           name="description"
           label="Description"
           rules={[
@@ -133,6 +145,14 @@ const PackageForm = () => {
             Click to Upload
           </Button>
         </FormUploadFile>
+        <FormItem
+          name={"isPopular"}
+          label={"Is Popular"}
+          valuePropName="checked"
+        >
+          <Switch />
+        </FormItem>
+
         <Row justify="end">
           <Button type="primary" htmlType="submit" loading={loading}>
             Save

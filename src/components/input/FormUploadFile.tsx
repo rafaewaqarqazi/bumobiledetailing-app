@@ -15,7 +15,12 @@ const FormUploadFile = ({
   };
   return (
     <FormItem valuePropName="file" getValueFromEvent={normFile} {...props}>
-      <UploadFile multiple={false} maxCount={1} accept="image/*">
+      <UploadFile
+        listType="picture"
+        multiple={false}
+        maxCount={1}
+        accept="image/*"
+      >
         {children}
       </UploadFile>
     </FormItem>

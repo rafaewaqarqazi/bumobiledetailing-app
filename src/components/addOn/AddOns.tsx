@@ -29,8 +29,9 @@ import {
 import { Paragraph } from "@/components/antd-sub-components";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { addOnCrud } from "@/utils/crud/addOn.crud";
+import { addOnCrud, IAddOn } from "@/utils/crud/addOn.crud";
 import { IAddOnCategory } from "@/utils/crud/addOn.category.crud";
+import Image from "next/image";
 
 const AddOns = () => {
   const [pagination, setPagination] = useState({
@@ -65,6 +66,18 @@ const AddOns = () => {
   };
   const columns = useMemo(
     () => [
+      {
+        title: "Icon",
+        render: (data: IAddOn) => (
+          <Image
+            src={data.image}
+            alt={data.name}
+            width={40}
+            height={40}
+            className="rounded"
+          />
+        ),
+      },
       {
         title: "Name",
         dataIndex: "name",

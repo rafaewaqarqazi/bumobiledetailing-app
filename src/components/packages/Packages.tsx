@@ -29,7 +29,12 @@ import {
 import { Paragraph } from "@/components/antd-sub-components";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { IPackageAddOn, packageCrud } from "@/utils/crud/package.crud";
+import {
+  IPackage,
+  IPackageAddOn,
+  packageCrud,
+} from "@/utils/crud/package.crud";
+import Image from "next/image";
 
 const Packages = () => {
   const [pagination, setPagination] = useState({
@@ -65,8 +70,25 @@ const Packages = () => {
   const columns = useMemo(
     () => [
       {
+        title: "Icon",
+        render: (data: IPackage) => (
+          <Image
+            src={data.image}
+            alt={data.name}
+            width={40}
+            height={40}
+            className="rounded"
+          />
+        ),
+      },
+      {
         title: "Name",
         dataIndex: "name",
+      },
+      {
+        title: "Display Name",
+        dataIndex: "displayName",
+        render: (displayName: string) => displayName || "--",
       },
       {
         title: "Description",

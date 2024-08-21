@@ -6,9 +6,11 @@ const PACKAGE_URL = "/package";
 export interface IPackage {
   id: number;
   name: string;
+  displayName: string;
   description: string;
   price: number;
   isPopular: boolean;
+  image: string;
   services: any[];
   packageAddOns: IPackageAddOn[];
   createdAt: Date;
