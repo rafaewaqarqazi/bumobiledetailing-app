@@ -145,6 +145,13 @@ const Packages = () => {
     ],
     [],
   );
+  const handleTableChange = (pagination: any) => {
+    refetch({
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+      queryString: searchText,
+    });
+  };
   return (
     <>
       <Card
@@ -173,6 +180,7 @@ const Packages = () => {
             ...pagination,
             showTotal: showTotal,
           }}
+          onChange={handleTableChange}
           scroll={{ x: true }}
           rowKey="id"
         />

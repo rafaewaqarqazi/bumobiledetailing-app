@@ -123,6 +123,13 @@ const AddOnCategories = () => {
     ],
     [],
   );
+  const handleTableChange = (pagination: any) => {
+    refetch({
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+      queryString: searchText,
+    });
+  };
   return (
     <>
       <Card
@@ -149,6 +156,7 @@ const AddOnCategories = () => {
             ...pagination,
             showTotal: showTotal,
           }}
+          onChange={handleTableChange}
           scroll={{ x: true }}
           rowKey="id"
         />
