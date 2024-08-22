@@ -1,15 +1,15 @@
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import { ThemeConfig } from "antd";
 import { Colors } from "@/utils/helpers";
 
-const plus_jakarta_sans = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
 export const tokenTheme = {
   colorText: Colors.colorText,
   colorTextTertiary: Colors.colorTextSecondary,
-  fontFamily: plus_jakarta_sans.style.fontFamily,
+  fontFamily: inter.style.fontFamily,
   colorError: Colors.danger2,
 };
 const InputTheme = {

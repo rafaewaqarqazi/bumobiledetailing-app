@@ -154,6 +154,7 @@ const Services = () => {
             ...pagination,
             showTotal: showTotal,
           }}
+          scroll={{ x: true }}
           rowKey="id"
         />
       </Card>

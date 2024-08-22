@@ -1,71 +1,61 @@
 import React from "react";
-import { Card, Flex, Form } from "antd";
+import { Card, Col, Flex, Form, Row } from "antd";
 import { Title } from "@/components/antd-sub-components";
 import Image from "next/image";
+import { currencyFormatter } from "@/utils/helpers";
+import { IPackage } from "@/utils/crud/package.crud";
+import { IService } from "@/utils/crud/service.crud";
 
 const GetStartedPackage = ({ next }: { next: () => void }) => {
   const form = Form.useFormInstance();
-  const onClick = (_package: string) => () => {
+  const service: IService = Form.useWatch("service", form);
+  const onClick = (_package: IPackage) => () => {
     form.setFieldValue("package", _package);
+    const addOns: {
+      [key: number]: number;
+    } = {};
+    console.log({ _package });
+    _package.packageAddOns.forEach((addOn) => {
+      addOns[addOn.addOn.id] = 1;
+    });
+    form.setFieldValue("customerAddOns", addOns);
     next();
   };
   return (
-    <Flex wrap="wrap" gap={4} justify="space-between" className="mt-4">
-      <Card
-        className="w-40 hover:border-primary cursor-pointer group flex justify-center"
-        onClick={onClick("full-detail")}
-      >
-        <Image
-          src="/images/package/full-detail.png"
-          alt="coupe"
-          width={120}
-          height={120}
-          className="group-hover:scale-105 transition ease-in-out rounded-full"
-        />
-        <Title
-          level={5}
-          className="text-center !mt-3 group-hover:!text-primary"
-        >
-          Full Detail
-        </Title>
-      </Card>
-      <Card
-        className="w-40 hover:border-primary cursor-pointer group flex justify-center"
-        onClick={onClick("interior")}
-      >
-        <Image
-          src="/images/package/interior.png"
-          alt="sedan"
-          width={120}
-          height={120}
-          className="group-hover:scale-105 transition ease-in-out rounded-full"
-        />
-        <Title
-          level={5}
-          className="text-center !mt-3 group-hover:!text-primary"
-        >
-          Interior Only
-        </Title>
-      </Card>
-      <Card
-        className="w-40 hover:border-primary cursor-pointer group flex justify-center"
-        onClick={onClick("exterior")}
-      >
-        <Image
-          src="/images/package/exterior.png"
-          alt="suv"
-          width={120}
-          height={120}
-          className="group-hover:scale-105 transition ease-in-out rounded-full"
-        />
-        <Title
-          level={5}
-          className="text-center !mt-3 group-hover:!text-primary"
-        >
-          Exterior Only
-        </Title>
-      </Card>
-    </Flex>
+    <Row gutter={[16, 16]}>
+      {service?.servicePackages?.map((servicePackage) => (
+        <Col xs={24} key={servicePackage?.package?.id}>
+          <Card
+            className="!p-1 hover:border-primary cursor-pointer group"
+            onClick={onClick(servicePackage?.package)}
+          >
+            <Flex gap={16} align="center">
+              <div>
+                <Image
+                  src={servicePackage?.package?.image}
+                  alt={servicePackage?.package?.name}
+                  width={120}
+                  height={120}
+                  className="group-hover:scale-105 transition ease-in-out rounded-2xl"
+                />
+              </div>
+              <div>
+                <Title level={4} className="!mt-0 group-hover:!text-primary">
+                  {servicePackage?.package?.displayName}
+                </Title>
+                <Title
+                  level={5}
+                  type="secondary"
+                  className="!mt-0 !mb-0 !font-extrabold !text-colorGrey"
+                >
+                  {currencyFormatter.format(servicePackage?.package?.price)}
+                </Title>
+              </div>
+            </Flex>
+          </Card>
+        </Col>
+      ))}
+    </Row>
   );
 };
 

@@ -28,7 +28,7 @@ export const Colors = {
   layoutBg: "#F2F5F7",
   colorText: "#333",
   colorTextSecondary: "#667085",
-  colorGrey: "#D9DEE4",
+  colorGrey: "#848484",
   cardBgDark: "#E5F1F7",
   cardBgBlueish: "#D6EAF3",
 };
@@ -44,3 +44,6 @@ export const currencyFormatter = Intl.NumberFormat("en-US", {
 export const numberFormatter = Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
+export const getFileName = (url: string) => {
+  return url?.match(/[^/]+$/)?.[0]?.replace(/^\d+_/, "") || "";
+};

@@ -170,6 +170,7 @@ const AddOns = () => {
             ...pagination,
             showTotal: showTotal,
           }}
+          scroll={{ x: true }}
           rowKey="id"
         />
       </Card>

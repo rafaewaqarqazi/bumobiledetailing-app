@@ -1,18 +1,39 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Form, Input, message, Row, Select } from "antd";
+import {
+  Button,
+  Card,
+  Dropdown,
+  Flex,
+  Form,
+  Input,
+  message,
+  Row,
+  Select,
+  Table,
+  Tag,
+} from "antd";
 import { useService } from "@/hooks/service.hooks";
-import { FormItem, Option, TextArea } from "@/components/antd-sub-components";
+import {
+  FormItem,
+  Option,
+  Paragraph,
+  Text,
+  TextArea,
+} from "@/components/antd-sub-components";
 import { useRouter } from "next/navigation";
 import { serviceCrud } from "@/utils/crud/service.crud";
-import { getErrorMsg } from "@/utils/helpers";
+import { currencyFormatter, getErrorMsg } from "@/utils/helpers";
 import { usePackages } from "@/hooks/package.hooks";
 import FormUploadFile from "@/components/input/FormUploadFile";
-import { UploadOutlined } from "@ant-design/icons";
+import { MoreOutlined, UploadOutlined } from "@ant-design/icons";
+import { IPackage } from "@/utils/crud/package.crud";
 const ServiceForm = () => {
   const { service } = useService();
   const { packages } = usePackages({});
   const [form] = Form.useForm();
+  const servicePackages = Form.useWatch("servicePackages", form);
+  const isPopular = Form.useWatch("isPopular", form);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   useEffect(() => {
@@ -20,6 +41,8 @@ const ServiceForm = () => {
       form.setFieldsValue({
         ...service,
         servicePackages: service.servicePackages?.map((sp) => sp.package?.id),
+        isPopular: service.servicePackages?.find((sp) => sp.isPopular)?.package
+          ?.id,
       });
     }
   }, [service]);
@@ -28,10 +51,13 @@ const ServiceForm = () => {
     if (service?.id) {
       values.id = service.id;
     }
+    const _isPopular = values.isPopular;
+    delete values.isPopular;
     serviceCrud[service?.id ? "update" : "create"]({
       ...values,
       servicePackages: values.servicePackages.map((id: number) => ({
         package: id,
+        isPopular: _isPopular === id,
       })),
     })
       .then(() => {
@@ -48,13 +74,16 @@ const ServiceForm = () => {
         setLoading(false);
       });
   };
+  const onClickMakePopular = (id: number) => () => {
+    form.setFieldsValue({ isPopular: id });
+  };
   return (
     <Card title="Add Service">
       <Form
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        className="!max-w-xl !mx-auto"
+        className="!max-w-3xl !mx-auto"
       >
         <FormItem
           name="name"
@@ -93,6 +122,66 @@ const ServiceForm = () => {
             ))}
           </Select>
         </FormItem>
+        <FormItem name="isPopular" hidden />
+        <Table
+          className="mb-4"
+          dataSource={
+            servicePackages?.map((id: number) =>
+              packages?.find((p) => p.id === id),
+            ) || []
+          }
+          columns={[
+            {
+              title: "Name",
+              render: (data: IPackage) => (
+                <Flex align="center" wrap="nowrap" gap={8}>
+                  <Text>{data.name}</Text>
+                  {data.id === isPopular && <Tag color="green">Popular</Tag>}
+                </Flex>
+              ),
+            },
+            {
+              title: "Display Name",
+              dataIndex: "displayName",
+            },
+            {
+              title: "Price",
+              dataIndex: "price",
+              render: (price: number) => currencyFormatter.format(price),
+            },
+            {
+              title: "Description",
+              dataIndex: "description",
+              render: (description: string) => (
+                <Paragraph ellipsis={{ rows: 2 }} className="!m-0">
+                  {description || "--"}
+                </Paragraph>
+              ),
+            },
+            {
+              title: "Actions",
+              align: "right",
+              render: (record) => (
+                <Dropdown
+                  menu={{
+                    items: [
+                      {
+                        key: "edit",
+                        label: "Make Popular",
+                        onClick: onClickMakePopular(record.id),
+                        disabled: record.id === isPopular,
+                      },
+                    ],
+                  }}
+                >
+                  <Button icon={<MoreOutlined />} />
+                </Dropdown>
+              ),
+            },
+          ]}
+          pagination={false}
+          rowKey="id"
+        />
         <FormUploadFile
           name="image"
           label="Icon"

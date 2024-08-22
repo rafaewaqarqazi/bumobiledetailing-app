@@ -16,4 +16,5 @@ export interface IHooksList {
   current?: number;
   pageSize?: number;
   total?: number;
+  [key: string]: any;
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { Button, Checkbox, Col, Form, Input, Row } from "antd";
-import { FormItem } from "@/components/antd-sub-components";
+import { FormItem, Text } from "@/components/antd-sub-components";
 import MaskedInputWrapper from "@/components/input/MaskedInputWrapper";
 import { customerCrud, ICustomer } from "@/utils/crud/customer.crud";
 import AddressFormInput from "@/components/input/AddressFormInput";
@@ -39,11 +39,11 @@ const GetStartedBookAppointment = ({
   };
   return (
     <Form form={form} onFinish={onFinish} layout="vertical" size="small">
-      <Row gutter={[8, 8]}>
+      <Row gutter={[8, 0]}>
         <Col xs={24} sm={12}>
           <FormItem
             name="firstName"
-            label="First Name"
+            label="First name"
             rules={[
               { required: true, message: "Please input your first name" },
             ]}
@@ -54,13 +54,13 @@ const GetStartedBookAppointment = ({
         <Col xs={24} sm={12}>
           <FormItem
             name="lastName"
-            label="Last Name"
+            label="Last name"
             rules={[{ required: true, message: "Please input your last name" }]}
           >
             <Input size="large" placeholder="Smith" />
           </FormItem>
         </Col>
-        <Col xs={24} sm={12}>
+        <Col xs={24}>
           <FormItem
             name="email"
             label="Email"
@@ -72,7 +72,20 @@ const GetStartedBookAppointment = ({
             <Input size="large" placeholder="johnsmith@gmail.com" />
           </FormItem>
         </Col>
-        <Col xs={24} sm={12}>
+        <Col xs={24}>
+          <FormItem name="city" hidden />
+          <FormItem name="state" hidden />
+          <FormItem name="zipCode" hidden />
+          <FormItem name="country" hidden />
+          <FormItem
+            name="address"
+            label="Address"
+            rules={[{ required: true, message: "Please input your address" }]}
+          >
+            <AddressFormInput />
+          </FormItem>
+        </Col>
+        <Col xs={24}>
           <FormItem
             name="phone"
             label="Phone"
@@ -94,19 +107,6 @@ const GetStartedBookAppointment = ({
             />
           </FormItem>
         </Col>
-        <Col xs={24}>
-          <FormItem name="city" hidden />
-          <FormItem name="state" hidden />
-          <FormItem name="zipCode" hidden />
-          <FormItem name="country" hidden />
-          <FormItem
-            name="address"
-            label="Address"
-            rules={[{ required: true, message: "Please input your address" }]}
-          >
-            <AddressFormInput />
-          </FormItem>
-        </Col>
 
         <Col xs={24}>
           <FormItem
@@ -114,7 +114,9 @@ const GetStartedBookAppointment = ({
             valuePropName="checked"
           >
             <Checkbox>
-              I agree to receive SMS updates regarding my appointment
+              <Text type="secondary" className="!font-normal">
+                I agree to receive SMS updates regarding my appointment
+              </Text>
             </Checkbox>
           </FormItem>
         </Col>

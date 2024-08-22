@@ -173,6 +173,7 @@ const Packages = () => {
             ...pagination,
             showTotal: showTotal,
           }}
+          scroll={{ x: true }}
           rowKey="id"
         />
       </Card>
