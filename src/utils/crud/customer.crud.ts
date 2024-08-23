@@ -25,10 +25,10 @@ export const customerCrud = {
   delete(id: number) {
     return axiosInstance.delete(`${CUSTOMER_URL}/${id}`);
   },
-  get(id: number) {
+  getById(id: number) {
     return axiosInstance.get(`${CUSTOMER_URL}/${id}`);
   },
   list(params?: any) {
-    return axiosInstance.get(CUSTOMER_URL, { params });
+    return axiosInstance.get(`${CUSTOMER_URL}s`, { params });
   },
 };

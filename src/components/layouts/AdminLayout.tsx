@@ -14,6 +14,7 @@ import {
 } from "@/components/antd-sub-components";
 import {
   BoxPlotOutlined,
+  ClockCircleOutlined,
   DashboardOutlined,
   MenuFoldOutlined,
   UserOutlined,
@@ -54,6 +55,11 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
         key: "addon-categories",
         label: <Link href="/admin/addon-categories">AddOn Categories</Link>,
         icon: <BoxPlotOutlined />,
+      },
+      {
+        key: "timeslot",
+        label: <Link href="/admin/timeslots">Timeslots</Link>,
+        icon: <ClockCircleOutlined />,
       },
       {
         key: "employees",
