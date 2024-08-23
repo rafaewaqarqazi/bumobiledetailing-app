@@ -8,7 +8,7 @@ import { useAddOns } from "@/hooks/addOns.hooks";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { IAddOn } from "@/utils/crud/addOn.crud";
 
-const GetStartedAddOns = () => {
+const GetStartedAddOns = ({ next }: { next: () => void }) => {
   const form = Form.useFormInstance();
   const _package: IPackage = Form.useWatch("package", form);
   const customerAddOns: {
@@ -209,7 +209,13 @@ const GetStartedAddOns = () => {
             </Col>
           ))}
         </Row>
-        <Button type="primary" className="!mt-4" block size="large">
+        <Button
+          type="primary"
+          className="!mt-4"
+          block
+          size="large"
+          onClick={next}
+        >
           Pay Total {currencyFormatter.format(totalPrice)}
         </Button>
       </div>

@@ -9,10 +9,11 @@ import GetStartedService from "@/components/get-started/GetStarted.Service";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import GetStartedPackage from "@/components/get-started/GetStarted.Package";
 import GetStartedAddOns from "@/components/get-started/GetStarted.AddOns";
+import GetStartedTimeslot from "@/components/get-started/GetStarted.Timeslot";
 
 const GetStartedMain = () => {
   const [form] = Form.useForm();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   const [customer, setCustomer] = useState<ICustomer | null>(null);
 
   const title = useMemo(() => {
@@ -93,7 +94,13 @@ const GetStartedMain = () => {
           name="customerAddOns"
           className={`${step !== 5 ? "hidden" : ""} !mb-0`}
         >
-          <GetStartedAddOns />
+          <GetStartedAddOns next={next} />
+        </FormItem>
+        <FormItem
+          name="timeslot"
+          className={`${step !== 6 ? "hidden" : ""} !mb-0`}
+        >
+          <GetStartedTimeslot next={next} />
         </FormItem>
       </Form>
     </Card>

@@ -20,7 +20,6 @@ const TimeslotForm = ({
   const { timeslot } = useTimeslot(id);
   const [form] = Form.useForm();
   const days = Form.useWatch("days", form);
-  const time = Form.useWatch("time", form);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (timeslot) {
@@ -75,7 +74,6 @@ const TimeslotForm = ({
       className="!max-w-xl !mx-auto"
     >
       <FormItem name="days" className={"!hidden"} />
-      {/*<FormItem name="time" className={"!hidden"} />*/}
       <FormItem
         name="time"
         label="Time"
@@ -132,8 +130,8 @@ const TimeslotForm = ({
           SAT
         </Checkbox>
         <Checkbox
-          checked={days?.includes("7")}
-          value="7"
+          checked={days?.includes("0")}
+          value="0"
           onChange={onChangeDays}
         >
           SUN
