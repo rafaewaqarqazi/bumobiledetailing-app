@@ -18,6 +18,7 @@ import { ITimeslot } from "@/utils/crud/timeslot.crud";
 import { bookingCrud } from "@/utils/crud/booking.crud";
 import { getErrorMsg, getTotalPrice } from "@/utils/helpers";
 import { useAddOns } from "@/hooks/addOns.hooks";
+import { IVehicle } from "@/utils/crud/vehicle.crud";
 
 const GetStartedMain = () => {
   const [form] = Form.useForm();
@@ -60,7 +61,7 @@ const GetStartedMain = () => {
     setStep((prevState) => prevState - 1);
   };
   const onFinish = (values: {
-    car: string;
+    car: IVehicle;
     service: IService;
     package: IPackage;
     customerAddOns: {
@@ -71,7 +72,13 @@ const GetStartedMain = () => {
     setLoading(true);
     bookingCrud
       .create({
-        car: values.car,
+        vehicle: {
+          type: values.car?.type,
+          make: values.car?.make,
+          model: values.car?.model,
+          year: values.car?.year,
+          licensePlate: values.car?.licensePlate,
+        },
         service: values.service.id,
         package: values.package.id,
         customerAddOns: values.customerAddOns,

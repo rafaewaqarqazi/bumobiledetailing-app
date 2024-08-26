@@ -1,9 +1,10 @@
 import { axiosInstance } from "@/utils/config";
+import { IVehicle } from "@/utils/crud/vehicle.crud";
 
 const BOOKING_URL = "/booking";
 
 export interface IBooking {
-  car: string;
+  vehicle: Partial<IVehicle>;
   service: number;
   package: number;
   customerAddOns: {
