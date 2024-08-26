@@ -40,7 +40,7 @@ const GetStartedCar = ({
   };
   return (
     <Row gutter={[16, 16]}>
-      <Col xs={24} sm={12}>
+      <Col xs={24} sm={8}>
         <Card
           className=" hover:border-primary cursor-pointer group !p-1"
           onClick={onClick("coupe")}
@@ -57,7 +57,7 @@ const GetStartedCar = ({
           </Title>
         </Card>
       </Col>
-      <Col xs={24} sm={12}>
+      <Col xs={24} sm={8}>
         <Card
           className=" hover:border-primary cursor-pointer group !p-1"
           onClick={onClick("sedan")}
@@ -74,7 +74,7 @@ const GetStartedCar = ({
           </Title>
         </Card>
       </Col>
-      <Col xs={24} sm={12}>
+      <Col xs={24} sm={8}>
         <Card
           className=" hover:border-primary cursor-pointer group !p-1"
           onClick={onClick("suv")}
@@ -111,7 +111,7 @@ const GetStartedCar = ({
             <Input size="large" placeholder="Year / Make / Model" />
           </FormItem>
 
-          {/*<Col xs={24} sm={12}>*/}
+          {/*<Col xs={24} sm={8}>*/}
           {/*  <FormItem*/}
           {/*    name={["car", "model"]}*/}
           {/*    label="Model"*/}
@@ -125,7 +125,7 @@ const GetStartedCar = ({
           {/*    <Input size="large" placeholder="Model" />*/}
           {/*  </FormItem>*/}
           {/*</Col>*/}
-          {/*<Col xs={24} sm={12}>*/}
+          {/*<Col xs={24} sm={8}>*/}
           {/*  <FormItem*/}
           {/*    name={["car", "year"]}*/}
           {/*    label="Year"*/}
@@ -139,12 +139,12 @@ const GetStartedCar = ({
           {/*    <Input size="large" placeholder="Year" />*/}
           {/*  </FormItem>*/}
           {/*</Col>*/}
-          {/*<Col xs={24} sm={12}>*/}
+          {/*<Col xs={24} sm={8}>*/}
           {/*  <FormItem name={["car", "vin"]} label="VIN">*/}
           {/*    <Input size="large" placeholder="VIN" />*/}
           {/*  </FormItem>*/}
           {/*</Col>*/}
-          {/*<Col xs={24} sm={12}>*/}
+          {/*<Col xs={24} sm={8}>*/}
           {/*  <FormItem*/}
           {/*    name={["car", "licensePlate"]}*/}
           {/*    label="License Plate"*/}
