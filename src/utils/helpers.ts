@@ -1,3 +1,6 @@
+import { IAddOn } from "@/utils/crud/addOn.crud";
+import { IPackage } from "@/utils/crud/package.crud";
+
 export const getErrorMsg = (err: any, customMsg?: string) =>
   (err.response?.data?.data?.details?.length &&
     err.response?.data?.data?.details?.[0]?.message) ||
@@ -46,4 +49,46 @@ export const numberFormatter = Intl.NumberFormat("en-US", {
 });
 export const getFileName = (url: string) => {
   return url?.match(/[^/]+$/)?.[0]?.replace(/^\d+_/, "") || "";
+};
+export const getTotalPrice = ({
+  package: _package,
+  customerAddOns,
+  addOns,
+}: {
+  package: IPackage;
+  customerAddOns: {
+    [_key: number]: number;
+  };
+  addOns: IAddOn[];
+}) => {
+  let total = Number(_package?.price || 0);
+  Object.keys(customerAddOns || {}).forEach((key) => {
+    const addOn = addOns?.find((a) => a.id === +key);
+    if (_package?.packageAddOns?.some((pAddOn) => pAddOn.addOn?.id === +key)) {
+      if (Number(customerAddOns[+key] || 0) > 1) {
+        total +=
+          Number(addOn?.price || 0) * (Number(customerAddOns[+key] || 0) - 1);
+      }
+    } else {
+      total += Number(addOn?.price || 0) * Number(customerAddOns[+key] || 0);
+    }
+  });
+  return total;
+};
+export const getTotalDurationByAddOns = ({
+  customerAddOns,
+  addOns,
+}: {
+  customerAddOns: {
+    [_key: number]: number;
+  };
+  addOns: IAddOn[];
+}) => {
+  let totalMinutes = 0;
+  Object.keys(customerAddOns || {}).forEach((key) => {
+    const addOn = addOns?.find((a) => a.id === +key);
+    totalMinutes +=
+      Number(addOn?.duration || 0) * Number(customerAddOns[+key] || 0);
+  });
+  return totalMinutes > 0 ? Math.ceil(totalMinutes / 60) : 0;
 };

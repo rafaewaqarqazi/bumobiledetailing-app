@@ -17,6 +17,7 @@ import {
   ClockCircleOutlined,
   DashboardOutlined,
   MenuFoldOutlined,
+  ScheduleOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
@@ -34,6 +35,11 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
         key: "dashboard",
         label: <Link href="/admin/dashboard">Dashboard</Link>,
         icon: <DashboardOutlined />,
+      },
+      {
+        key: "booking",
+        label: <Link href="/admin/bookings">Bookings</Link>,
+        icon: <ScheduleOutlined />,
       },
       {
         key: "services",

@@ -14,16 +14,27 @@ import {
 } from "antd";
 import { Title } from "@/components/antd-sub-components";
 import Image from "next/image";
-import { currencyFormatter, getErrorMsg } from "@/utils/helpers";
+import {
+  currencyFormatter,
+  getErrorMsg,
+  getTotalDurationByAddOns,
+  getTotalPrice,
+} from "@/utils/helpers";
 import { IPackage } from "@/utils/crud/package.crud";
-import { useAddOns } from "@/hooks/addOns.hooks";
 import dayjs, { Dayjs } from "dayjs";
 import { ITimeslot, timeslotCrud } from "@/utils/crud/timeslot.crud";
+import { IAddOn } from "@/utils/crud/addOn.crud";
 
-const GetStartedTimeslot = ({ next }: { next: () => void }) => {
+const GetStartedTimeslot = ({
+  next,
+  addOns,
+}: {
+  next: () => void;
+  addOns: IAddOn[];
+}) => {
   const form = Form.useFormInstance();
   const [value, setValue] = useState<Dayjs>();
-  const [selectedValue, setSelectedValue] = useState<Dayjs>();
+  const [selectedValue, setSelectedValue] = useState<Dayjs>(dayjs());
   const [loading, setLoading] = useState(false);
   const [timeslots, setTimeslots] = useState<ITimeslot[]>([]);
   useEffect(() => {
@@ -53,29 +64,26 @@ const GetStartedTimeslot = ({ next }: { next: () => void }) => {
   const customerAddOns: {
     [key: number]: number;
   } = Form.useWatch("customerAddOns", form);
-
-  const { addOns } = useAddOns({});
-  const totalPrice = useMemo(() => {
-    let total = Number(_package?.price || 0);
-    Object.keys(customerAddOns || {}).forEach((key) => {
-      const addOn = addOns?.find((a) => a.id === +key);
-      if (
-        _package?.packageAddOns?.some((pAddOn) => pAddOn.addOn?.id === +key)
-      ) {
-        if (Number(customerAddOns[+key] || 0) > 1) {
-          total +=
-            Number(addOn?.price || 0) * (Number(customerAddOns[+key] || 0) - 1);
-        }
-      } else {
-        total += Number(addOn?.price || 0) * Number(customerAddOns[+key] || 0);
-      }
-    });
-    return total;
-  }, [customerAddOns, _package, addOns]);
+  const totalPrice = useMemo(
+    () =>
+      getTotalPrice({
+        addOns,
+        package: _package,
+        customerAddOns,
+      }),
+    [customerAddOns, _package, addOns],
+  );
   const onClickTimeslot = (timeslot: ITimeslot) => () => {
-    form.setFieldValue("timeslot", timeslot);
-    // next();
+    form.setFieldValue("timeslot", {
+      timeslot,
+      date: dayjs(selectedValue).format("YYYY-MM-DD"),
+    });
+    next();
   };
+  const totalDuration = useMemo(
+    () => getTotalDurationByAddOns({ customerAddOns, addOns }),
+    [customerAddOns, addOns],
+  );
   return (
     _package && (
       <div className="mt-4">
@@ -99,7 +107,7 @@ const GetStartedTimeslot = ({ next }: { next: () => void }) => {
                 type="secondary"
                 className="!mt-0 !mb-0 !font-extrabold !text-colorGrey"
               >
-                {currencyFormatter.format(_package?.price)}
+                {currencyFormatter.format(totalPrice)} | {totalDuration}hrs
               </Title>
             </div>
           </Flex>
@@ -147,7 +155,7 @@ const GetStartedTimeslot = ({ next }: { next: () => void }) => {
           size="large"
           onClick={next}
         >
-          Pay Total {currencyFormatter.format(totalPrice)}
+          Next
         </Button>
       </div>
     )

@@ -2,20 +2,24 @@ import React, { useMemo } from "react";
 import { Button, Card, Col, Flex, Form, InputNumber, Row } from "antd";
 import { Title } from "@/components/antd-sub-components";
 import Image from "next/image";
-import { currencyFormatter } from "@/utils/helpers";
+import { currencyFormatter, getTotalPrice } from "@/utils/helpers";
 import { IPackage } from "@/utils/crud/package.crud";
-import { useAddOns } from "@/hooks/addOns.hooks";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { IAddOn } from "@/utils/crud/addOn.crud";
 
-const GetStartedAddOns = ({ next }: { next: () => void }) => {
+const GetStartedAddOns = ({
+  next,
+  addOns,
+}: {
+  next: () => void;
+  addOns: IAddOn[];
+}) => {
   const form = Form.useFormInstance();
   const _package: IPackage = Form.useWatch("package", form);
   const customerAddOns: {
     [key: number]: number;
   } = Form.useWatch("customerAddOns", form);
 
-  const { addOns } = useAddOns({});
   const onClickMinus = (addOn: IAddOn) => () => {
     const value = customerAddOns?.[addOn?.id] || 0;
     const newAddOns = {
@@ -39,23 +43,15 @@ const GetStartedAddOns = ({ next }: { next: () => void }) => {
         ),
     );
   }, [_package, addOns]);
-  const totalPrice = useMemo(() => {
-    let total = Number(_package?.price || 0);
-    Object.keys(customerAddOns || {}).forEach((key) => {
-      const addOn = addOns?.find((a) => a.id === +key);
-      if (
-        _package?.packageAddOns?.some((pAddOn) => pAddOn.addOn?.id === +key)
-      ) {
-        if (Number(customerAddOns[+key] || 0) > 1) {
-          total +=
-            Number(addOn?.price || 0) * (Number(customerAddOns[+key] || 0) - 1);
-        }
-      } else {
-        total += Number(addOn?.price || 0) * Number(customerAddOns[+key] || 0);
-      }
-    });
-    return total;
-  }, [customerAddOns, _package, addOns]);
+  const totalPrice = useMemo(
+    () =>
+      getTotalPrice({
+        addOns,
+        customerAddOns,
+        package: _package,
+      }),
+    [customerAddOns, _package, addOns],
+  );
   return (
     _package && (
       <div className="mt-4">
@@ -216,7 +212,7 @@ const GetStartedAddOns = ({ next }: { next: () => void }) => {
           size="large"
           onClick={next}
         >
-          Pay Total {currencyFormatter.format(totalPrice)}
+          Add {currencyFormatter.format(totalPrice)}
         </Button>
       </div>
     )

@@ -8,6 +8,7 @@ export interface IAddOn {
   name: string;
   image: string;
   price: number;
+  duration: number;
   category: IAddOnCategory;
   createdAt: Date;
   updatedAt: Date;

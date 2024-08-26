@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { useCustomers } from "@/hooks/customer.hooks";
+import { useBookings } from "@/hooks/booking.hooks";
 import {
   Button,
   Card,
@@ -18,18 +18,27 @@ import {
   MoreOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { dateFormat, getErrorMsg, showTotal } from "@/utils/helpers";
+import {
+  currencyFormatter,
+  dateFormat,
+  getErrorMsg,
+  getTotalPrice,
+  showTotal,
+} from "@/utils/helpers";
 import dayjs from "dayjs";
-import { customerCrud } from "@/utils/crud/customer.crud";
+import { bookingCrud } from "@/utils/crud/booking.crud";
+import { ICustomer } from "@/utils/crud/customer.crud";
+import { IService } from "@/utils/crud/service.crud";
+import { IPackage } from "@/utils/crud/package.crud";
 
-const Customers = () => {
+const Bookings = () => {
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
     total: 0,
   });
 
-  const { customers, loading, refetch } = useCustomers({
+  const { bookings, loading, refetch } = useBookings({
     ...pagination,
     setPagination,
   });
@@ -37,11 +46,11 @@ const Customers = () => {
 
   const onClickDelete = (id: number) => () => {
     Modal.confirm({
-      title: "Delete Customer",
-      content: "Are you sure you want to delete this customer?",
+      title: "Delete Booking",
+      content: "Are you sure you want to delete this booking?",
       onOk: () => {
         return new Promise((resolve, reject) => {
-          customerCrud
+          bookingCrud
             .delete(id)
             .then(() => {
               refetch({ ...pagination });
@@ -59,19 +68,57 @@ const Customers = () => {
     () => [
       {
         title: "First Name",
-        dataIndex: "firstName",
+        dataIndex: "customer",
+        render: (customer: ICustomer) => customer.firstName,
       },
       {
         title: "Last Name",
-        dataIndex: "lastName",
+        dataIndex: "customer",
+        render: (customer: ICustomer) => customer.lastName,
       },
       {
         title: "Email",
-        dataIndex: "email",
+        dataIndex: "customer",
+        render: (customer: ICustomer) => customer.email,
       },
       {
         title: "Phone",
-        dataIndex: "phone",
+        dataIndex: "customer",
+        render: (customer: ICustomer) => customer.phone,
+      },
+      {
+        title: "Service",
+        dataIndex: "service",
+        render: (service: IService) => service.name,
+      },
+      {
+        title: "Package",
+        dataIndex: "package",
+        render: (_package: IPackage) => _package.name,
+      },
+      {
+        title: "Total Price",
+        render: (record: any) =>
+          currencyFormatter.format(
+            getTotalPrice({
+              package: record.package,
+              addOns: record.customerAddOns?.map((addOn: any) => addOn.addOn),
+              customerAddOns: {
+                ...record.customerAddOns?.reduce(
+                  (acc: any, addOn: any) => ({
+                    ...acc,
+                    [addOn.addOn.id]: addOn.quantity,
+                  }),
+                  {},
+                ),
+              },
+            }),
+          ),
+      },
+      {
+        title: "Timeslot",
+        dataIndex: "schedule",
+        render: (schedule: any) => `${schedule.date} ${schedule.timeslot.time}`,
       },
       {
         title: "Created At",
@@ -112,21 +159,21 @@ const Customers = () => {
   return (
     <>
       <Card
-        title="Customers"
+        title="Bookings"
         extra={
           <Space wrap>
             <Input
               value={searchText}
               prefix={<SearchOutlined />}
               onChange={handleChangeSearch}
-              placeholder="Search customer"
+              placeholder="Search booking"
             />
           </Space>
         }
       >
         <Table
           loading={loading}
-          dataSource={customers}
+          dataSource={bookings}
           columns={columns as TableColumnsType}
           pagination={{
             ...pagination,
@@ -141,4 +188,4 @@ const Customers = () => {
   );
 };
 
-export default Customers;
+export default Bookings;
