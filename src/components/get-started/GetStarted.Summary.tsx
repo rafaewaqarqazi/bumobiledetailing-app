@@ -71,8 +71,15 @@ const GetStartedSummary = ({
         {customerAddOns &&
           Object.keys(customerAddOns).map((key) => {
             const addOn = addOns?.find((a) => a.id === +key);
+            const isPackageAddOn = _package?.packageAddOns?.find(
+              (pa) => pa.addOn?.id === +key,
+            );
+            const hasQuantity = isPackageAddOn
+              ? true
+              : customerAddOns[+key] > 0;
             return (
-              addOn && (
+              addOn &&
+              hasQuantity && (
                 <Flex gap={16} align="center" className="pl-10" key={key}>
                   <div>
                     <Image
