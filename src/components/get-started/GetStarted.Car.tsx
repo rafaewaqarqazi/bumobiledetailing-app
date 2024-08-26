@@ -2,23 +2,40 @@ import React from "react";
 import { Button, Card, Col, Divider, Form, Input, Row } from "antd";
 import { FormItem, Title } from "@/components/antd-sub-components";
 import Image from "next/image";
+import { IVehicle } from "@/utils/crud/vehicle.crud";
+import { ICustomer } from "@/utils/crud/customer.crud";
 
-const GetStartedCar = ({ next }: { next: () => void }) => {
+const GetStartedCar = ({
+  next,
+}: {
+  next: () => void;
+  customer?: ICustomer | null;
+}) => {
   const form = Form.useFormInstance();
-  const car = Form.useWatch("car", form);
+  const car: IVehicle & { info: string } = Form.useWatch("car", form);
   const onClick = (car: string) => () => {
     form.setFieldValue("car", { type: car });
   };
   const onClickNext = () => {
     form
-      .validateFields([
-        ["car", "make"],
-        ["car", "model"],
-        ["car", "year"],
-        ["car", "licensePlate"],
-      ])
+      .validateFields([["car", "info"]])
       .then(() => {
+        // const carInfo = car?.info.split("/");
+        // vehicleCrud
+        //   .create({
+        //     type: car?.type,
+        //     make: carInfo[1],
+        //     model: carInfo[2],
+        //     year: carInfo[0],
+        //     // licensePlate: car?.licensePlate,
+        //     customer: customer?.id,
+        //   })
+        //   .then((res) => {
+        //     form.setFieldValue(["car", "id"], res.data.data.id);
         next();
+      })
+      .catch((err) => {
+        console.error(err);
       });
   };
   return (
@@ -77,74 +94,76 @@ const GetStartedCar = ({ next }: { next: () => void }) => {
       {car?.type && (
         <Col xs={24}>
           <Divider />
-          <Row gutter={[16, 0]}>
-            <Col xs={24} sm={12}>
-              <FormItem
-                name={["car", "make"]}
-                label="Make"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input the make of your car!",
-                  },
-                ]}
-              >
-                <Input size="large" placeholder="Make" />
-              </FormItem>
-            </Col>
-            <Col xs={24} sm={12}>
-              <FormItem
-                name={["car", "model"]}
-                label="Model"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input the model of your car!",
-                  },
-                ]}
-              >
-                <Input size="large" placeholder="Model" />
-              </FormItem>
-            </Col>
-            <Col xs={24} sm={12}>
-              <FormItem
-                name={["car", "year"]}
-                label="Year"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input the year of your car!",
-                  },
-                ]}
-              >
-                <Input size="large" placeholder="Year" />
-              </FormItem>
-            </Col>
-            {/*<Col xs={24} sm={12}>*/}
-            {/*  <FormItem name={["car", "vin"]} label="VIN">*/}
-            {/*    <Input size="large" placeholder="VIN" />*/}
-            {/*  </FormItem>*/}
-            {/*</Col>*/}
-            <Col xs={24} sm={12}>
-              <FormItem
-                name={["car", "licensePlate"]}
-                label="License Plate"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input the license plate of your car!",
-                  },
-                ]}
-              >
-                <Input size="large" placeholder="License Plate" />
-              </FormItem>
-            </Col>
-            {/*<Col xs={24}>*/}
-            {/*  <FormItem name={["car", "color"]} label="Color">*/}
-            {/*    <Input size="large" placeholder="Color" />*/}
-            {/*  </FormItem>*/}
-            {/*</Col>*/}
-          </Row>
+
+          <FormItem
+            name={["car", "info"]}
+            label="Vehicle"
+            rules={[
+              {
+                required: true,
+                message: "Please input the info of your car!",
+                pattern: new RegExp(
+                  /^[0-9]{4}\s\/[a-zA-Z0-9\s]+\/[a-zA-Z0-9\s]+$/,
+                ),
+              },
+            ]}
+          >
+            <Input size="large" placeholder="Year / Make / Model" />
+          </FormItem>
+
+          {/*<Col xs={24} sm={12}>*/}
+          {/*  <FormItem*/}
+          {/*    name={["car", "model"]}*/}
+          {/*    label="Model"*/}
+          {/*    rules={[*/}
+          {/*      {*/}
+          {/*        required: true,*/}
+          {/*        message: "Please input the model of your car!",*/}
+          {/*      },*/}
+          {/*    ]}*/}
+          {/*  >*/}
+          {/*    <Input size="large" placeholder="Model" />*/}
+          {/*  </FormItem>*/}
+          {/*</Col>*/}
+          {/*<Col xs={24} sm={12}>*/}
+          {/*  <FormItem*/}
+          {/*    name={["car", "year"]}*/}
+          {/*    label="Year"*/}
+          {/*    rules={[*/}
+          {/*      {*/}
+          {/*        required: true,*/}
+          {/*        message: "Please input the year of your car!",*/}
+          {/*      },*/}
+          {/*    ]}*/}
+          {/*  >*/}
+          {/*    <Input size="large" placeholder="Year" />*/}
+          {/*  </FormItem>*/}
+          {/*</Col>*/}
+          {/*<Col xs={24} sm={12}>*/}
+          {/*  <FormItem name={["car", "vin"]} label="VIN">*/}
+          {/*    <Input size="large" placeholder="VIN" />*/}
+          {/*  </FormItem>*/}
+          {/*</Col>*/}
+          {/*<Col xs={24} sm={12}>*/}
+          {/*  <FormItem*/}
+          {/*    name={["car", "licensePlate"]}*/}
+          {/*    label="License Plate"*/}
+          {/*    rules={[*/}
+          {/*      {*/}
+          {/*        required: true,*/}
+          {/*        message: "Please input the license plate of your car!",*/}
+          {/*      },*/}
+          {/*    ]}*/}
+          {/*  >*/}
+          {/*    <Input size="large" placeholder="License Plate" />*/}
+          {/*  </FormItem>*/}
+          {/*</Col>*/}
+          {/*<Col xs={24}>*/}
+          {/*  <FormItem name={["car", "color"]} label="Color">*/}
+          {/*    <Input size="large" placeholder="Color" />*/}
+          {/*  </FormItem>*/}
+          {/*</Col>*/}
+
           <Button type="primary" size="large" block onClick={onClickNext}>
             Next
           </Button>

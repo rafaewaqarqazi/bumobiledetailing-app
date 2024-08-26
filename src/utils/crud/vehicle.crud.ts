@@ -1,4 +1,5 @@
 import { axiosInstance } from "@/utils/config";
+import { ICustomer } from "@/utils/crud/customer.crud";
 
 const VEHICLE_URL = "/vehicle";
 
@@ -10,10 +11,14 @@ export interface IVehicle {
   year: string;
   licensePlate: string;
   color: string;
+  customer: ICustomer;
+}
+interface IVehicleInput extends Omit<IVehicle, "customer"> {
   customer: number;
 }
+
 export const vehicleCrud = {
-  create: (vehicle: IVehicle) => {
+  create: (vehicle: Partial<IVehicleInput>) => {
     return axiosInstance.post(VEHICLE_URL, vehicle);
   },
   update: (vehicle: IVehicle) => {

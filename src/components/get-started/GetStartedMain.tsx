@@ -61,7 +61,7 @@ const GetStartedMain = () => {
     setStep((prevState) => prevState - 1);
   };
   const onFinish = (values: {
-    car: IVehicle;
+    car: IVehicle & { info: string };
     service: IService;
     package: IPackage;
     customerAddOns: {
@@ -70,14 +70,14 @@ const GetStartedMain = () => {
     timeslot: { date: string; timeslot: ITimeslot };
   }) => {
     setLoading(true);
+    const carInfo = values.car?.info.split("/");
     bookingCrud
       .create({
         vehicle: {
           type: values.car?.type,
-          make: values.car?.make,
-          model: values.car?.model,
-          year: values.car?.year,
-          licensePlate: values.car?.licensePlate,
+          make: carInfo[1],
+          model: carInfo[2],
+          year: carInfo[0],
         },
         service: values.service.id,
         package: values.package.id,
@@ -130,13 +130,13 @@ const GetStartedMain = () => {
       )}
       <Form layout="vertical" size="small" form={form} onFinish={onFinish}>
         <FormItem name="car" className={`${step !== 2 ? "hidden" : ""} !mb-0`}>
-          <GetStartedCar next={next} />
+          <GetStartedCar next={next} customer={customer} />
         </FormItem>
         <FormItem
           name="service"
           className={`${step !== 3 ? "hidden" : ""} !mb-0`}
         >
-          <GetStartedService next={next} />
+          <GetStartedService next={next} customer={customer} />
         </FormItem>
         <FormItem
           name="package"

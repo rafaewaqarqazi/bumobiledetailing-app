@@ -4,18 +4,37 @@ import { Title } from "@/components/antd-sub-components";
 import Image from "next/image";
 import { useServices } from "@/hooks/service.hooks";
 import { IService } from "@/utils/crud/service.crud";
+import { ICustomer } from "@/utils/crud/customer.crud";
 
-const GetStartedService = ({ next }: { next: () => void }) => {
+const GetStartedService = ({
+  next,
+  // customer,
+}: {
+  next: () => void;
+  customer: ICustomer | null;
+}) => {
   const form = Form.useFormInstance();
+  // const vehicle: IVehicle = Form.useWatch("vehicle", form);
   const { services } = useServices({ withAllRelations: true });
   const onClick = (_service: IService) => () => {
     form.setFieldValue("service", _service);
+    // customerServiceCrud
+    //   .create({
+    //     customer: customer?.id,
+    //     service: _service?.id,
+    //     vehicle: vehicle?.id,
+    //   })
+    //   .then(() => {
     next();
+    // })
+    // .catch((err) => {
+    //   console.error(err);
+    // });
   };
   return (
     <Row gutter={[16, 16]}>
       {services.map((service) => (
-        <Col xs={24} sm={12} key={service.id}>
+        <Col xs={24} sm={8} key={service.id}>
           <Card
             className="!p-1 hover:border-primary cursor-pointer group"
             onClick={onClick(service)}
