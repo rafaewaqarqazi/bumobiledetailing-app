@@ -19,6 +19,7 @@ import { bookingCrud } from "@/utils/crud/booking.crud";
 import { getErrorMsg, getTotalPrice } from "@/utils/helpers";
 import { useAddOns } from "@/hooks/addOns.hooks";
 import { IVehicle } from "@/utils/crud/vehicle.crud";
+import { useRouter } from "next/navigation";
 
 const GetStartedMain = () => {
   const [form] = Form.useForm();
@@ -26,6 +27,7 @@ const GetStartedMain = () => {
   const [loading, setLoading] = useState(false);
   const [customer, setCustomer] = useState<ICustomer | null>(null);
   const { addOns } = useAddOns({});
+  const router = useRouter();
   const title = useMemo(() => {
     switch (step) {
       case 1:
@@ -97,8 +99,8 @@ const GetStartedMain = () => {
         message.success("Booking created successfully");
         form.resetFields();
         setCustomer(null);
-        setStep(1);
         setLoading(false);
+        router.push("/get-started/thankyou");
       })
       .catch((err) => {
         message.error(getErrorMsg(err));

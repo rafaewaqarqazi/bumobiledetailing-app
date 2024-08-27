@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Button, Card, Divider, Flex, Form, Popover } from "antd";
 import Image from "next/image";
-import { Title } from "@/components/antd-sub-components";
+import { Text, Title } from "@/components/antd-sub-components";
 import {
   currencyFormatter,
   getTotalDurationByAddOns,
@@ -62,7 +62,9 @@ const GetStartedSummary = ({ addOns }: { addOns: IAddOn[] }) => {
             </Title>
           </div>
           <Popover
-            content={_package?.description}
+            content={
+              <Text className="whitespace-pre">{_package?.description}</Text>
+            }
             title={_package?.displayName}
           >
             <Button

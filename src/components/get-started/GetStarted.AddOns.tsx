@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Button, Card, Col, Flex, Form, InputNumber, Popover, Row } from "antd";
-import { Title } from "@/components/antd-sub-components";
+import { Text, Title } from "@/components/antd-sub-components";
 import Image from "next/image";
 import { currencyFormatter, getTotalPrice } from "@/utils/helpers";
 import { IPackage } from "@/utils/crud/package.crud";
@@ -118,7 +118,9 @@ const GetStartedAddOns = ({
               </Title>
             </div>
             <Popover
-              content={_package?.description}
+              content={
+                <Text className="whitespace-pre">{_package?.description}</Text>
+              }
               title={_package?.displayName}
             >
               <Button

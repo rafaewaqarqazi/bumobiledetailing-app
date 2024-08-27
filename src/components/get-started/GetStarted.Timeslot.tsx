@@ -13,7 +13,7 @@ import {
   Row,
   Spin,
 } from "antd";
-import { Title } from "@/components/antd-sub-components";
+import { Text, Title } from "@/components/antd-sub-components";
 import Image from "next/image";
 import {
   currencyFormatter,
@@ -138,7 +138,9 @@ const GetStartedTimeslot = ({
               </Title>
             </div>
             <Popover
-              content={_package?.description}
+              content={
+                <Text className="whitespace-pre">{_package?.description}</Text>
+              }
               title={_package?.displayName}
             >
               <Button

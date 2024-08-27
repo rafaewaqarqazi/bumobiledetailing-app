@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Card, Col, Flex, Form, Popover, Row } from "antd";
-import { Title } from "@/components/antd-sub-components";
+import { Text, Title } from "@/components/antd-sub-components";
 import Image from "next/image";
 import { currencyFormatter, getTotalPrice } from "@/utils/helpers";
 import { IPackage } from "@/utils/crud/package.crud";
@@ -83,7 +83,11 @@ const GetStartedPackage = ({
                 </Title>
               </div>
               <Popover
-                content={servicePackage?.package?.description}
+                content={
+                  <Text className="whitespace-pre">
+                    {servicePackage?.package?.description}
+                  </Text>
+                }
                 title={servicePackage?.package?.displayName}
               >
                 <Button
