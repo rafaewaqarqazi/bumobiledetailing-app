@@ -6,6 +6,7 @@ const SERVICE_URL = "/service";
 export interface IServicePackage {
   id: number;
   isPopular: boolean;
+  rank: number;
   package: IPackage;
   service: IService;
 }

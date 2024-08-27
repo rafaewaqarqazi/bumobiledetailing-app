@@ -20,6 +20,7 @@ export interface IPackageAddOn {
   id: number;
   addOn: IAddOn;
   package: IPackage;
+  rank: number;
 }
 export const packageCrud = {
   create: (data: IPackage) => {

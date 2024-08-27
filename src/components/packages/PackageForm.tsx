@@ -1,14 +1,29 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Button, Card, Form, Input, message, Row, Select } from "antd";
+import React, { useEffect, useMemo, useState } from "react";
+import { Button, Card, Form, Input, message, Row, Table } from "antd";
 import { usePackage } from "@/hooks/package.hooks";
-import { FormItem, Option, TextArea } from "@/components/antd-sub-components";
+import { FormItem, TextArea } from "@/components/antd-sub-components";
 import { useAddOns } from "@/hooks/addOns.hooks";
-import { packageCrud } from "@/utils/crud/package.crud";
+import { IPackageAddOn, packageCrud } from "@/utils/crud/package.crud";
 import { useRouter } from "next/navigation";
 import { getErrorMsg } from "@/utils/helpers";
 import FormUploadFile from "@/components/input/FormUploadFile";
 import { UploadOutlined } from "@ant-design/icons";
+import type { DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import PackageFormAddOns from "@/components/packages/PackageFormAddOns";
+import DragAbleTableRow from "@/components/dnd/DragAbleTableRow";
 
 const PackageForm = () => {
   const { packageData } = usePackage();
@@ -16,14 +31,15 @@ const PackageForm = () => {
   const [form] = Form.useForm();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
+  const packageAddOns: IPackageAddOn[] = Form.useWatch("packageAddOns", form);
   useEffect(() => {
     if (packageData) {
       form.setFieldsValue({
         ...packageData,
-        packageAddOns: packageData.packageAddOns?.map(
-          (addOn) => addOn.addOn?.id,
-        ),
+        packageAddOns: packageData.packageAddOns?.map((addOn) => ({
+          id: addOn.addOn.id,
+          rank: addOn.rank,
+        })),
       });
     }
   }, [packageData]);
@@ -34,7 +50,10 @@ const PackageForm = () => {
     }
     packageCrud[packageData?.id ? "update" : "create"]({
       ...values,
-      packageAddOns: values.packageAddOns.map((id: number) => ({ addOn: id })),
+      packageAddOns: values.packageAddOns.map((p: IPackageAddOn) => ({
+        addOn: p.id,
+        rank: p.rank,
+      })),
     })
       .then(() => {
         setLoading(false);
@@ -50,6 +69,36 @@ const PackageForm = () => {
         setLoading(false);
       });
   };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 1,
+      },
+    }),
+  );
+
+  const onDragEnd = ({ active, over }: DragEndEvent) => {
+    if (active.id !== over?.id) {
+      const activeIndex = packageAddOns.findIndex((i) => i.id === active.id);
+      const overIndex = packageAddOns.findIndex((i) => i.id === over?.id);
+      const newPackageAddOns = arrayMove(packageAddOns, activeIndex, overIndex);
+      form.setFieldValue(
+        "packageAddOns",
+        newPackageAddOns.map((p, i) => ({ ...p, rank: i })),
+      );
+    }
+  };
+  const dataSource = useMemo(
+    () =>
+      (
+        packageAddOns?.map((p: IPackageAddOn) => ({
+          ...p,
+          ...addOns?.find((a) => a.id === p.id),
+        })) || []
+      ).sort((a: IPackageAddOn, b: IPackageAddOn) => a.rank - b.rank),
+    [packageAddOns, addOns],
+  );
   return (
     <Card title="Add Package">
       <Form
@@ -123,14 +172,40 @@ const PackageForm = () => {
             },
           ]}
         >
-          <Select mode="multiple">
-            {addOns.map((addOn) => (
-              <Option key={addOn.id} value={addOn.id}>
-                {addOn.name}
-              </Option>
-            ))}
-          </Select>
+          <PackageFormAddOns addOns={addOns} />
         </FormItem>
+        <DndContext
+          sensors={sensors}
+          modifiers={[restrictToVerticalAxis]}
+          onDragEnd={onDragEnd}
+        >
+          <SortableContext
+            items={dataSource}
+            strategy={verticalListSortingStrategy}
+          >
+            <Table
+              columns={[
+                {
+                  title: "Order",
+                  dataIndex: "rank",
+                },
+                {
+                  title: "Name",
+                  dataIndex: "name",
+                },
+              ]}
+              rowKey={(record) => record?.id}
+              dataSource={dataSource}
+              pagination={false}
+              scroll={{ x: true }}
+              components={{
+                body: {
+                  row: DragAbleTableRow,
+                },
+              }}
+            />
+          </SortableContext>
+        </DndContext>
         <FormUploadFile
           name="image"
           label="Icon"

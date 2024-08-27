@@ -3,8 +3,8 @@ import { Button, Card, Col, Flex, Form, Popover, Row } from "antd";
 import { Text, Title } from "@/components/antd-sub-components";
 import Image from "next/image";
 import { currencyFormatter, getTotalPrice } from "@/utils/helpers";
-import { IPackage } from "@/utils/crud/package.crud";
-import { IService } from "@/utils/crud/service.crud";
+import { IPackage, IPackageAddOn } from "@/utils/crud/package.crud";
+import { IService, IServicePackage } from "@/utils/crud/service.crud";
 import { customerServiceCrud } from "@/utils/crud/customerService.crud";
 import { ICustomer } from "@/utils/crud/customer.crud";
 import { IVehicle } from "@/utils/crud/vehicle.crud";
@@ -26,9 +26,11 @@ const GetStartedPackage = ({
     const addOns: {
       [key: number]: number;
     } = {};
-    _package.packageAddOns.forEach((addOn) => {
-      addOns[addOn.addOn.id] = 1;
-    });
+    _package.packageAddOns
+      ?.sort((a: IPackageAddOn, b: IPackageAddOn) => a.rank - b.rank)
+      .forEach((addOn) => {
+        addOns[addOn.addOn.id] = 1;
+      });
     form.setFieldValue("customerAddOns", addOns);
     customerServiceCrud
       .create({
@@ -54,57 +56,59 @@ const GetStartedPackage = ({
   };
   return (
     <Row gutter={[16, 16]}>
-      {service?.servicePackages?.map((servicePackage) => (
-        <Col xs={24} key={servicePackage?.package?.id}>
-          <Card
-            className="!p-1 hover:border-primary cursor-pointer group"
-            onClick={onClick(servicePackage?.package)}
-          >
-            <Flex gap={16} align="center" className="relative">
-              <div>
-                <Image
-                  src={servicePackage?.package?.image}
-                  alt={servicePackage?.package?.name}
-                  width={120}
-                  height={120}
-                  className="group-hover:scale-105 transition ease-in-out rounded-2xl"
-                />
-              </div>
-              <div>
-                <Title level={4} className="!mt-0 group-hover:!text-primary">
-                  {servicePackage?.package?.displayName}
-                </Title>
-                <Title
-                  level={5}
-                  type="secondary"
-                  className="!mt-0 !mb-0 !font-extrabold !text-colorGrey"
-                >
-                  {currencyFormatter.format(servicePackage?.package?.price)}
-                </Title>
-              </div>
-              <Popover
-                content={
-                  <Text className="whitespace-pre">
-                    {servicePackage?.package?.description}
-                  </Text>
-                }
-                title={servicePackage?.package?.displayName}
-              >
-                <Button
-                  className="!absolute top-0 right-0"
-                  icon={
-                    <Icon
-                      className="!text-2xl [&_svg]:!fill-white"
-                      component={InformationCircleIcon}
-                    />
+      {service?.servicePackages
+        ?.sort((a: IServicePackage, b: IServicePackage) => a.rank - b.rank)
+        ?.map((servicePackage) => (
+          <Col xs={24} key={servicePackage?.package?.id}>
+            <Card
+              className="!p-1 hover:border-primary cursor-pointer group"
+              onClick={onClick(servicePackage?.package)}
+            >
+              <Flex gap={16} align="center" className="relative">
+                <div>
+                  <Image
+                    src={servicePackage?.package?.image}
+                    alt={servicePackage?.package?.name}
+                    width={120}
+                    height={120}
+                    className="group-hover:scale-105 transition ease-in-out rounded-2xl"
+                  />
+                </div>
+                <div>
+                  <Title level={4} className="!mt-0 group-hover:!text-primary">
+                    {servicePackage?.package?.displayName}
+                  </Title>
+                  <Title
+                    level={5}
+                    type="secondary"
+                    className="!mt-0 !mb-0 !font-extrabold !text-colorGrey"
+                  >
+                    {currencyFormatter.format(servicePackage?.package?.price)}
+                  </Title>
+                </div>
+                <Popover
+                  content={
+                    <Text className="whitespace-pre">
+                      {servicePackage?.package?.description}
+                    </Text>
                   }
-                  type="text"
-                />
-              </Popover>
-            </Flex>
-          </Card>
-        </Col>
-      ))}
+                  title={servicePackage?.package?.displayName}
+                >
+                  <Button
+                    className="!absolute top-0 right-0"
+                    icon={
+                      <Icon
+                        className="!text-2xl [&_svg]:!fill-white"
+                        component={InformationCircleIcon}
+                      />
+                    }
+                    type="text"
+                  />
+                </Popover>
+              </Flex>
+            </Card>
+          </Col>
+        ))}
     </Row>
   );
 };
