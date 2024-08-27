@@ -28,6 +28,14 @@ interface ICustomerServiceInput {
   package: number;
   schedule: number;
   vehicle: number;
+  customerAddOns: {
+    [key: number]: number;
+  };
+  timeslot: {
+    timeslot: number;
+    date: string;
+  };
+  totalPrice: string;
 }
 export const customerServiceCrud = {
   create: (data: Partial<ICustomerServiceInput>) => {

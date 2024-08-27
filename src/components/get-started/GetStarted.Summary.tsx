@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Button, Card, Divider, Flex, Form } from "antd";
+import { Button, Card, Divider, Flex, Form, Popover } from "antd";
 import Image from "next/image";
 import { Title } from "@/components/antd-sub-components";
 import {
@@ -8,16 +8,11 @@ import {
   getTotalPrice,
 } from "@/utils/helpers";
 import { IPackage } from "@/utils/crud/package.crud";
-import { ClockCircleOutlined } from "@ant-design/icons";
+import Icon, { ClockCircleOutlined } from "@ant-design/icons";
 import { IAddOn } from "@/utils/crud/addOn.crud";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
-const GetStartedSummary = ({
-  next,
-  addOns,
-}: {
-  next: () => void;
-  addOns: IAddOn[];
-}) => {
+const GetStartedSummary = ({ addOns }: { addOns: IAddOn[] }) => {
   const form = Form.useFormInstance();
   const _package: IPackage = Form.useWatch("package", form);
   const timeslot = Form.useWatch("timeslot", form);
@@ -44,7 +39,7 @@ const GetStartedSummary = ({
         Booking Summary
       </Title>
       <Card className="!p-1">
-        <Flex gap={16} align="center">
+        <Flex gap={16} align="center" className="relative">
           <div>
             <Image
               src={_package?.image}
@@ -66,6 +61,21 @@ const GetStartedSummary = ({
               {currencyFormatter.format(totalPrice)} | {totalDuration}hrs
             </Title>
           </div>
+          <Popover
+            content={_package?.description}
+            title={_package?.displayName}
+          >
+            <Button
+              className="!absolute top-0 right-0"
+              icon={
+                <Icon
+                  className="!text-2xl [&_svg]:!fill-white"
+                  component={InformationCircleIcon}
+                />
+              }
+              type="text"
+            />
+          </Popover>
         </Flex>
         <Divider />
         {customerAddOns &&
@@ -108,15 +118,6 @@ const GetStartedSummary = ({
           <ClockCircleOutlined /> {timeslot?.date} {timeslot?.timeslot?.time}
         </Title>
       </Card>
-      <Button
-        type="primary"
-        className="!mt-4"
-        block
-        size="large"
-        onClick={next}
-      >
-        Next
-      </Button>
     </div>
   );
 };

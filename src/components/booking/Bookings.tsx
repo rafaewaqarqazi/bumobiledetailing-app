@@ -22,7 +22,6 @@ import {
   currencyFormatter,
   dateFormat,
   getErrorMsg,
-  getTotalPrice,
   showTotal,
 } from "@/utils/helpers";
 import dayjs from "dayjs";
@@ -30,6 +29,7 @@ import { bookingCrud } from "@/utils/crud/booking.crud";
 import { ICustomer } from "@/utils/crud/customer.crud";
 import { IService } from "@/utils/crud/service.crud";
 import { IPackage } from "@/utils/crud/package.crud";
+import { ISchedule } from "@/utils/crud/schedule.crud";
 
 const Bookings = () => {
   const [pagination, setPagination] = useState({
@@ -99,26 +99,13 @@ const Bookings = () => {
       {
         title: "Total Price",
         render: (record: any) =>
-          currencyFormatter.format(
-            getTotalPrice({
-              package: record.package,
-              addOns: record.customerAddOns?.map((addOn: any) => addOn.addOn),
-              customerAddOns: {
-                ...record.customerAddOns?.reduce(
-                  (acc: any, addOn: any) => ({
-                    ...acc,
-                    [addOn.addOn.id]: addOn.quantity,
-                  }),
-                  {},
-                ),
-              },
-            }),
-          ),
+          currencyFormatter.format(record.quote?.quotedAmount || 0),
       },
       {
         title: "Timeslot",
         dataIndex: "schedule",
-        render: (schedule: any) => `${schedule.date} ${schedule.timeslot.time}`,
+        render: (schedule: ISchedule) =>
+          schedule ? `${schedule.date} ${schedule.timeslot.time}` : "--",
       },
       {
         title: "Created At",

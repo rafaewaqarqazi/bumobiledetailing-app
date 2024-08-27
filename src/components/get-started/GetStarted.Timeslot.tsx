@@ -9,6 +9,7 @@ import {
   Flex,
   Form,
   message,
+  Popover,
   Row,
   Spin,
 } from "antd";
@@ -24,19 +25,33 @@ import { IPackage } from "@/utils/crud/package.crud";
 import dayjs, { Dayjs } from "dayjs";
 import { ITimeslot, timeslotCrud } from "@/utils/crud/timeslot.crud";
 import { IAddOn } from "@/utils/crud/addOn.crud";
+import { ICustomer } from "@/utils/crud/customer.crud";
+import { customerServiceCrud } from "@/utils/crud/customerService.crud";
+import { IService } from "@/utils/crud/service.crud";
+import { IVehicle } from "@/utils/crud/vehicle.crud";
+import Icon from "@ant-design/icons";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
 const GetStartedTimeslot = ({
   next,
   addOns,
+  customer,
 }: {
   next: () => void;
   addOns: IAddOn[];
+  customer: ICustomer | null;
 }) => {
   const form = Form.useFormInstance();
   const [value, setValue] = useState<Dayjs>();
   const [selectedValue, setSelectedValue] = useState<Dayjs>(dayjs());
   const [loading, setLoading] = useState(false);
   const [timeslots, setTimeslots] = useState<ITimeslot[]>([]);
+  const _package: IPackage = Form.useWatch("package", form);
+  const service: IService = Form.useWatch("service", form);
+  const vehicle: IVehicle = Form.useWatch("vehicle", form);
+  const customerAddOns: {
+    [key: number]: number;
+  } = Form.useWatch("customerAddOns", form);
   useEffect(() => {
     if (selectedValue) {
       setLoading(true);
@@ -60,10 +75,7 @@ const GetStartedTimeslot = ({
   const onPanelChange = (newValue: Dayjs) => {
     setValue(newValue);
   };
-  const _package: IPackage = Form.useWatch("package", form);
-  const customerAddOns: {
-    [key: number]: number;
-  } = Form.useWatch("customerAddOns", form);
+
   const totalPrice = useMemo(
     () =>
       getTotalPrice({
@@ -74,11 +86,26 @@ const GetStartedTimeslot = ({
     [customerAddOns, _package, addOns],
   );
   const onClickTimeslot = (timeslot: ITimeslot) => () => {
-    form.setFieldValue("timeslot", {
+    const _timeslot = {
       timeslot,
       date: dayjs(selectedValue).format("YYYY-MM-DD"),
-    });
-    next();
+    };
+    form.setFieldValue("timeslot", _timeslot);
+    customerServiceCrud
+      .create({
+        customer: customer?.id,
+        service: service?.id,
+        vehicle: vehicle?.id,
+        package: _package?.id,
+        customerAddOns: customerAddOns,
+        timeslot: { ..._timeslot, timeslot: timeslot.id },
+      })
+      .then(() => {
+        next();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
   const totalDuration = useMemo(
     () => getTotalDurationByAddOns({ customerAddOns, addOns }),
@@ -88,7 +115,7 @@ const GetStartedTimeslot = ({
     _package && (
       <div className="mt-4">
         <Card className="!p-1">
-          <Flex gap={16} align="center">
+          <Flex gap={16} align="center" className="relative">
             <div>
               <Image
                 src={_package?.image}
@@ -110,6 +137,21 @@ const GetStartedTimeslot = ({
                 {currencyFormatter.format(totalPrice)} | {totalDuration}hrs
               </Title>
             </div>
+            <Popover
+              content={_package?.description}
+              title={_package?.displayName}
+            >
+              <Button
+                className="!absolute top-0 right-0"
+                icon={
+                  <Icon
+                    className="!text-2xl [&_svg]:!fill-white"
+                    component={InformationCircleIcon}
+                  />
+                }
+                type="text"
+              />
+            </Popover>
           </Flex>
         </Card>
         <Calendar
@@ -120,7 +162,7 @@ const GetStartedTimeslot = ({
           fullscreen={false}
           className="!mt-4"
         />
-        <Divider />
+        <Divider>Select a timeslot</Divider>
         <Row gutter={[16, 16]} className="!min-h-20">
           {loading ? (
             <div className="flex items-center justify-center h-20 w-full">
@@ -148,15 +190,6 @@ const GetStartedTimeslot = ({
             ))
           )}
         </Row>
-        <Button
-          type="primary"
-          className="!mt-4"
-          block
-          size="large"
-          onClick={next}
-        >
-          Next
-        </Button>
       </div>
     )
   );

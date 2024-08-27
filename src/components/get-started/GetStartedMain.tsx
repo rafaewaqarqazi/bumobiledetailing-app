@@ -106,7 +106,7 @@ const GetStartedMain = () => {
       });
   };
   return (
-    <Card bordered={false} className="w-full !p-6 !shadow-2xl rounded-2xl">
+    <Card bordered={false} className="w-full sm:!p-6 !shadow-2xl rounded-2xl">
       {step > 1 && (
         <Button icon={<ArrowLeftOutlined />} type="text" onClick={back} />
       )}
@@ -142,23 +142,23 @@ const GetStartedMain = () => {
           name="package"
           className={`${step !== 4 ? "hidden" : ""} !mb-0`}
         >
-          <GetStartedPackage next={next} />
+          <GetStartedPackage next={next} customer={customer} />
         </FormItem>
         <FormItem
           name="customerAddOns"
           className={`${step !== 5 ? "hidden" : ""} !mb-0`}
         >
-          <GetStartedAddOns next={next} addOns={addOns} />
+          <GetStartedAddOns next={next} addOns={addOns} customer={customer} />
         </FormItem>
         <FormItem
           name="timeslot"
           className={`${step !== 6 ? "hidden" : ""} !mb-0`}
         >
-          <GetStartedTimeslot next={next} addOns={addOns} />
+          <GetStartedTimeslot next={next} addOns={addOns} customer={customer} />
         </FormItem>
-        {step === 7 && <GetStartedSummary next={next} addOns={addOns} />}
-        {step === 8 && (
+        {step === 7 && (
           <>
+            <GetStartedSummary addOns={addOns} />
             <GetStartedTermsOfService />
             <Button
               type="primary"

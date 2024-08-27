@@ -5,31 +5,33 @@ import Image from "next/image";
 import { useServices } from "@/hooks/service.hooks";
 import { IService } from "@/utils/crud/service.crud";
 import { ICustomer } from "@/utils/crud/customer.crud";
+import { IVehicle } from "@/utils/crud/vehicle.crud";
+import { customerServiceCrud } from "@/utils/crud/customerService.crud";
 
 const GetStartedService = ({
   next,
-  // customer,
+  customer,
 }: {
   next: () => void;
   customer: ICustomer | null;
 }) => {
   const form = Form.useFormInstance();
-  // const vehicle: IVehicle = Form.useWatch("vehicle", form);
+  const vehicle: IVehicle = Form.useWatch("vehicle", form);
   const { services } = useServices({ withAllRelations: true });
   const onClick = (_service: IService) => () => {
     form.setFieldValue("service", _service);
-    // customerServiceCrud
-    //   .create({
-    //     customer: customer?.id,
-    //     service: _service?.id,
-    //     vehicle: vehicle?.id,
-    //   })
-    //   .then(() => {
-    next();
-    // })
-    // .catch((err) => {
-    //   console.error(err);
-    // });
+    customerServiceCrud
+      .create({
+        customer: customer?.id,
+        service: _service?.id,
+        vehicle: vehicle?.id,
+      })
+      .then(() => {
+        next();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
   return (
     <Row gutter={[16, 16]}>

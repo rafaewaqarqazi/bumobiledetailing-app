@@ -2,11 +2,12 @@ import React from "react";
 import { Button, Card, Col, Divider, Form, Input, Row } from "antd";
 import { FormItem, Title } from "@/components/antd-sub-components";
 import Image from "next/image";
-import { IVehicle } from "@/utils/crud/vehicle.crud";
+import { IVehicle, vehicleCrud } from "@/utils/crud/vehicle.crud";
 import { ICustomer } from "@/utils/crud/customer.crud";
 
 const GetStartedCar = ({
   next,
+  customer,
 }: {
   next: () => void;
   customer?: ICustomer | null;
@@ -20,19 +21,19 @@ const GetStartedCar = ({
     form
       .validateFields([["car", "info"]])
       .then(() => {
-        // const carInfo = car?.info.split("/");
-        // vehicleCrud
-        //   .create({
-        //     type: car?.type,
-        //     make: carInfo[1],
-        //     model: carInfo[2],
-        //     year: carInfo[0],
-        //     // licensePlate: car?.licensePlate,
-        //     customer: customer?.id,
-        //   })
-        //   .then((res) => {
-        //     form.setFieldValue(["car", "id"], res.data.data.id);
-        next();
+        const carInfo = car?.info.split("/");
+        vehicleCrud
+          .create({
+            type: car?.type,
+            make: carInfo[1],
+            model: carInfo[2],
+            year: carInfo[0],
+            customer: customer?.id,
+          })
+          .then((res) => {
+            form.setFieldValue(["car", "id"], res.data.data.id);
+            next();
+          });
       })
       .catch((err) => {
         console.error(err);

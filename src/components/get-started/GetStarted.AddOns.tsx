@@ -1,21 +1,30 @@
 import React, { useMemo } from "react";
-import { Button, Card, Col, Flex, Form, InputNumber, Row } from "antd";
+import { Button, Card, Col, Flex, Form, InputNumber, Popover, Row } from "antd";
 import { Title } from "@/components/antd-sub-components";
 import Image from "next/image";
 import { currencyFormatter, getTotalPrice } from "@/utils/helpers";
 import { IPackage } from "@/utils/crud/package.crud";
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import Icon, { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { IAddOn } from "@/utils/crud/addOn.crud";
+import { ICustomer } from "@/utils/crud/customer.crud";
+import { customerServiceCrud } from "@/utils/crud/customerService.crud";
+import { IService } from "@/utils/crud/service.crud";
+import { IVehicle } from "@/utils/crud/vehicle.crud";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
 const GetStartedAddOns = ({
   next,
   addOns,
+  customer,
 }: {
   next: () => void;
   addOns: IAddOn[];
+  customer: ICustomer | null;
 }) => {
   const form = Form.useFormInstance();
   const _package: IPackage = Form.useWatch("package", form);
+  const service: IService = Form.useWatch("service", form);
+  const vehicle: IVehicle = Form.useWatch("vehicle", form);
   const customerAddOns: {
     [key: number]: number;
   } = Form.useWatch("customerAddOns", form);
@@ -52,11 +61,41 @@ const GetStartedAddOns = ({
       }),
     [customerAddOns, _package, addOns],
   );
+  const onClickAdd = () => {
+    const _addOns: {
+      [key: number]: number;
+    } = {};
+    Object.keys(customerAddOns).forEach((key) => {
+      const isPackageAddOn = _package?.packageAddOns?.some(
+        (pAddOn) => pAddOn.addOn?.id === +key,
+      );
+      if (isPackageAddOn) {
+        _addOns[+key] = customerAddOns[+key];
+      } else if (!isPackageAddOn && customerAddOns[+key] > 0) {
+        _addOns[+key] = customerAddOns[+key];
+      }
+    });
+    customerServiceCrud
+      .create({
+        customer: customer?.id,
+        service: service?.id,
+        vehicle: vehicle?.id,
+        package: _package?.id,
+        customerAddOns: _addOns,
+        totalPrice: `${totalPrice}`,
+      })
+      .then(() => {
+        next();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
   return (
     _package && (
       <div className="mt-4">
         <Card className="!p-1">
-          <Flex gap={16} align="center">
+          <Flex gap={16} align="center" className="relative">
             <div>
               <Image
                 src={_package?.image}
@@ -78,6 +117,21 @@ const GetStartedAddOns = ({
                 {currencyFormatter.format(_package?.price)}
               </Title>
             </div>
+            <Popover
+              content={_package?.description}
+              title={_package?.displayName}
+            >
+              <Button
+                className="!absolute top-0 right-0"
+                icon={
+                  <Icon
+                    className="!text-2xl [&_svg]:!fill-white"
+                    component={InformationCircleIcon}
+                  />
+                }
+                type="text"
+              />
+            </Popover>
           </Flex>
         </Card>
         <Row gutter={[16, 16]} className={"max-h-[550px] overflow-y-auto mt-4"}>
@@ -210,7 +264,7 @@ const GetStartedAddOns = ({
           className="!mt-4"
           block
           size="large"
-          onClick={next}
+          onClick={onClickAdd}
         >
           Add {currencyFormatter.format(totalPrice)}
         </Button>
