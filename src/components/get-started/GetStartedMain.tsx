@@ -1,7 +1,7 @@
 "use client";
-import React, { useMemo, useState } from "react";
-import { Button, Card, Form, message } from "antd";
-import { FormItem, Title } from "@/components/antd-sub-components";
+import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { Button, Card, Col, Flex, Form, Input, message, Row } from "antd";
+import { FormItem, Text, Title } from "@/components/antd-sub-components";
 import GetStartedBookAppointment from "@/components/get-started/GetStarted.BookAppointment";
 import { ICustomer } from "@/utils/crud/customer.crud";
 import GetStartedCar from "@/components/get-started/GetStarted.Car";
@@ -16,18 +16,30 @@ import { IService } from "@/utils/crud/service.crud";
 import { IPackage } from "@/utils/crud/package.crud";
 import { ITimeslot } from "@/utils/crud/timeslot.crud";
 import { bookingCrud } from "@/utils/crud/booking.crud";
-import { getErrorMsg, getTotalPrice } from "@/utils/helpers";
+import { getErrorMsg, getGAAddOns, getTotalPrice } from "@/utils/helpers";
 import { useAddOns } from "@/hooks/addOns.hooks";
 import { IVehicle } from "@/utils/crud/vehicle.crud";
 import { useRouter } from "next/navigation";
+import ReactGA from "react-ga4";
+import { environment } from "@/utils/config";
+import { couponCrud, ICoupon } from "@/utils/crud/coupon.crud";
 
 const GetStartedMain = () => {
   const [form] = Form.useForm();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [customer, setCustomer] = useState<ICustomer | null>(null);
+  const [visible, setVisible] = useState(false);
+  const [couponText, setCouponText] = useState("");
+  const [code, setCode] = useState<ICoupon | null>(null);
+  const [loadingCoupon, setLoadingCoupon] = useState(false);
   const { addOns } = useAddOns({});
   const router = useRouter();
+
+  useEffect(() => {
+    ReactGA.initialize(environment.ga4MeasurementId);
+  }, []);
+
   const title = useMemo(() => {
     switch (step) {
       case 1:
@@ -73,6 +85,20 @@ const GetStartedMain = () => {
   }) => {
     setLoading(true);
     const carInfo = values.car?.info.split("/");
+    const total = getTotalPrice({
+      package: values.package,
+      addOns: addOns,
+      customerAddOns: values.customerAddOns,
+    });
+    let discountAmount = 0;
+    if (code) {
+      if (code.discountPercentage) {
+        return (total * Number(code.discountPercentage)) / 100;
+      } else {
+        return Number(code.discountAmount);
+      }
+    }
+    const totalPrice = (total - discountAmount).toFixed(2);
     bookingCrud
       .create({
         vehicle: {
@@ -89,23 +115,64 @@ const GetStartedMain = () => {
           timeslot: values.timeslot.timeslot.id,
         },
         customer: customer?.id,
-        totalPrice: `${getTotalPrice({
-          package: values.package,
-          addOns: addOns,
-          customerAddOns: values.customerAddOns,
-        })}`,
+        totalPrice: `${totalPrice}`,
       })
       .then(() => {
         message.success("Booking created successfully");
-        form.resetFields();
-        setCustomer(null);
         setLoading(false);
-        router.push("/get-started/thankyou");
+        const _addOns: any[] = getGAAddOns({
+          customerAddOns: values.customerAddOns,
+          addOns,
+          package: values.package,
+        });
+        ReactGA.event("purchase", {
+          value: totalPrice,
+          currency: "USD",
+          coupon: (code as ICoupon | null)?.code || "",
+          items: [
+            {
+              item_id: values.package?.id,
+              item_name: values.package?.name,
+              affiliation: environment.appName,
+              discount: discountAmount,
+              index: 0,
+              price: Number(totalPrice),
+              quantity: 1,
+            },
+            ..._addOns,
+          ],
+        });
+        router.push(`/get-started/thankyou/${values?.package?.id}`);
       })
       .catch((err) => {
         message.error(getErrorMsg(err));
         setLoading(false);
       });
+  };
+  const toggleCoupon = () => {
+    setVisible((prevState) => !prevState);
+  };
+  const handleChangeCoupon = (e: ChangeEvent<HTMLInputElement>) => {
+    setCouponText(e.target.value);
+  };
+  const onApplyCoupon = () => {
+    setLoadingCoupon(true);
+    couponCrud
+      .getByCode(couponText)
+      .then((res) => {
+        setCode(res.data.data);
+        setLoadingCoupon(false);
+        message.success("Coupon applied successfully");
+      })
+      .catch((err) => {
+        message.error(getErrorMsg(err));
+        setLoadingCoupon(false);
+      });
+  };
+  const onRemoveCoupon = () => {
+    setCode(null);
+    setCouponText("");
+    setVisible(false);
   };
   return (
     <Card bordered={false} className="w-full sm:!p-6 !shadow-2xl rounded-2xl">
@@ -160,8 +227,51 @@ const GetStartedMain = () => {
         </FormItem>
         {step === 7 && (
           <>
-            <GetStartedSummary addOns={addOns} />
+            <GetStartedSummary addOns={addOns} code={code} />
             <GetStartedTermsOfService />
+            {code && code.code && (
+              <Flex justify="space-between" className="mb-4">
+                <Text type="success">{code.code} Applied</Text>
+                <Button type="text" onClick={onRemoveCoupon}>
+                  Remove
+                </Button>
+              </Flex>
+            )}
+            {!visible && !(code && !code.code) && (
+              <Button
+                type="text"
+                size="small"
+                className=" mb-4"
+                onClick={toggleCoupon}
+              >
+                <Text underline>Have a coupon code?</Text>
+              </Button>
+            )}
+            {visible && !code && (
+              <>
+                <Row align={"middle"} gutter={[8, 8]} className="mb-4">
+                  <Col xs={24}>
+                    <Input
+                      id="coupon"
+                      value={couponText}
+                      onChange={handleChangeCoupon}
+                      size="middle"
+                      placeholder={"Enter coupon code"}
+                    />
+                  </Col>
+                  <Col xs={24}>
+                    <Button
+                      size="middle"
+                      block={!code}
+                      loading={loadingCoupon}
+                      onClick={onApplyCoupon}
+                    >
+                      Apply
+                    </Button>
+                  </Col>
+                </Row>
+              </>
+            )}
             <Button
               type="primary"
               size="large"

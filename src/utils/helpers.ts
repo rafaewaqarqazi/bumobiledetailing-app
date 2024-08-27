@@ -1,6 +1,5 @@
 import { IAddOn } from "@/utils/crud/addOn.crud";
 import { IPackage } from "@/utils/crud/package.crud";
-
 export const getErrorMsg = (err: any, customMsg?: string) =>
   (err.response?.data?.data?.details?.length &&
     err.response?.data?.data?.details?.[0]?.message) ||
@@ -91,4 +90,48 @@ export const getTotalDurationByAddOns = ({
       Number(addOn?.duration || 0) * Number(customerAddOns[+key] || 0);
   });
   return totalMinutes > 0 ? Math.ceil(totalMinutes / 60) : 0;
+};
+
+export const getGAAddOns = ({
+  customerAddOns,
+  package: _package,
+  addOns,
+}: {
+  customerAddOns: {
+    [_key: number]: number;
+  };
+  package: IPackage;
+  addOns: IAddOn[];
+}) => {
+  const _addOns: any[] = [];
+  if (Object.keys(customerAddOns || {}).length === 0) {
+    return _addOns;
+  }
+  Object.keys(customerAddOns || {}).forEach((key) => {
+    const isPackageAddOn = _package?.packageAddOns?.some(
+      (pAddOn) => pAddOn.addOn?.id === +key,
+    );
+    if (isPackageAddOn) {
+      _addOns.push({
+        item_id: +key,
+        item_name: addOns.find((a) => a.id === +key)?.name,
+        affiliation: "BU Mobile Detailing",
+        discount: 0,
+        index: 0,
+        price: Number(addOns.find((a) => a.id === +key)?.price),
+        quantity: customerAddOns[+key],
+      });
+    } else if (!isPackageAddOn && customerAddOns[+key] > 0) {
+      _addOns.push({
+        item_id: +key,
+        item_name: addOns.find((a) => a.id === +key)?.name,
+        affiliation: "BU Mobile Detailing",
+        discount: 0,
+        index: 0,
+        price: Number(addOns.find((a) => a.id === +key)?.price),
+        quantity: customerAddOns[+key],
+      });
+    }
+  });
+  return _addOns;
 };

@@ -1,9 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Button, Card, Divider, Flex, Form, Popover } from "antd";
 import Image from "next/image";
 import { Text, Title } from "@/components/antd-sub-components";
 import {
   currencyFormatter,
+  getGAAddOns,
   getTotalDurationByAddOns,
   getTotalPrice,
 } from "@/utils/helpers";
@@ -11,8 +12,17 @@ import { IPackage } from "@/utils/crud/package.crud";
 import Icon, { ClockCircleOutlined } from "@ant-design/icons";
 import { IAddOn } from "@/utils/crud/addOn.crud";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import ReactGA from "react-ga4";
+import { environment } from "@/utils/config";
+import { ICoupon } from "@/utils/crud/coupon.crud";
 
-const GetStartedSummary = ({ addOns }: { addOns: IAddOn[] }) => {
+const GetStartedSummary = ({
+  addOns,
+  code,
+}: {
+  addOns: IAddOn[];
+  code: ICoupon | null;
+}) => {
   const form = Form.useFormInstance();
   const _package: IPackage = Form.useWatch("package", form);
   const timeslot = Form.useWatch("timeslot", form);
@@ -27,12 +37,62 @@ const GetStartedSummary = ({ addOns }: { addOns: IAddOn[] }) => {
         package: _package,
         customerAddOns,
       }),
+
     [customerAddOns, _package, addOns],
   );
+  const discountAmount = useMemo(() => {
+    if (code) {
+      if (code.discountPercentage) {
+        return (totalPrice * Number(code.discountPercentage)) / 100;
+      } else {
+        return Number(code.discountAmount);
+      }
+    }
+    return 0;
+  }, [code, totalPrice]);
   const totalDuration = useMemo(
     () => getTotalDurationByAddOns({ customerAddOns, addOns }),
     [customerAddOns, addOns],
   );
+  useEffect(() => {
+    const _addOns: any[] = getGAAddOns({
+      customerAddOns,
+      addOns,
+      package: _package,
+    });
+    ReactGA.event("add_to_cart", {
+      value: Number((totalPrice || 0).toFixed(2)),
+      currency: "USD",
+      items: [
+        {
+          item_id: _package?.id,
+          item_name: _package?.name,
+          affiliation: environment.appName,
+          discount: 0,
+          index: 0,
+          price: Number(totalPrice),
+          quantity: 1,
+        },
+        ..._addOns,
+      ],
+    });
+    ReactGA.event("begin_checkout", {
+      value: Number((totalPrice || 0).toFixed(2)),
+      currency: "USD",
+      items: [
+        {
+          item_id: _package?.id,
+          item_name: _package?.name,
+          affiliation: environment.appName,
+          discount: 0,
+          index: 0,
+          price: Number(totalPrice),
+          quantity: 1,
+        },
+        ..._addOns,
+      ],
+    });
+  }, []);
   return (
     <div>
       <Title level={2} className="!font-semibold !mt-0 !text-4xl">
@@ -58,7 +118,11 @@ const GetStartedSummary = ({ addOns }: { addOns: IAddOn[] }) => {
               type="secondary"
               className="!mt-0 !mb-0 !font-extrabold !text-colorGrey"
             >
-              {currencyFormatter.format(totalPrice)} | {totalDuration}hrs
+              {currencyFormatter.format(totalPrice - discountAmount)}{" "}
+              {discountAmount > 0 && (
+                <Text delete>{currencyFormatter.format(totalPrice)}</Text>
+              )}{" "}
+              | {totalDuration}hrs
             </Title>
           </div>
           <Popover

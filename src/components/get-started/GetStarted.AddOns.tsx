@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Button, Card, Col, Flex, Form, InputNumber, Popover, Row } from "antd";
 import { Text, Title } from "@/components/antd-sub-components";
 import Image from "next/image";
-import { currencyFormatter, getTotalPrice } from "@/utils/helpers";
+import { currencyFormatter, getGAAddOns, getTotalPrice } from "@/utils/helpers";
 import { IPackage, IPackageAddOn } from "@/utils/crud/package.crud";
 import Icon, { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { IAddOn } from "@/utils/crud/addOn.crud";
@@ -11,6 +11,8 @@ import { customerServiceCrud } from "@/utils/crud/customerService.crud";
 import { IService } from "@/utils/crud/service.crud";
 import { IVehicle } from "@/utils/crud/vehicle.crud";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import ReactGA from "react-ga4";
+import { environment } from "@/utils/config";
 
 const GetStartedAddOns = ({
   next,
@@ -61,6 +63,29 @@ const GetStartedAddOns = ({
       }),
     [customerAddOns, _package, addOns],
   );
+  useEffect(() => {
+    const _addOns: any[] = getGAAddOns({
+      customerAddOns,
+      addOns,
+      package: _package,
+    });
+    ReactGA.event("view_item", {
+      value: Number((totalPrice || 0).toFixed(2)),
+      currency: "USD",
+      items: [
+        {
+          item_id: _package?.id,
+          item_name: _package?.name,
+          affiliation: environment.appName,
+          discount: 0,
+          index: 0,
+          price: Number(totalPrice),
+          quantity: 1,
+        },
+        ..._addOns,
+      ],
+    });
+  }, []);
   const onClickAdd = () => {
     const _addOns: {
       [key: number]: number;

@@ -17,6 +17,7 @@ import {
   ClockCircleOutlined,
   DashboardOutlined,
   MenuFoldOutlined,
+  PercentageOutlined,
   ScheduleOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -76,6 +77,11 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
         key: "customers",
         label: <Link href="/admin/customers">Customers</Link>,
         icon: <UserOutlined />,
+      },
+      {
+        key: "coupon",
+        label: <Link href="/admin/coupons">Coupons</Link>,
+        icon: <PercentageOutlined />,
       },
     ],
     [],

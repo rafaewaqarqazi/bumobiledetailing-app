@@ -10,6 +10,7 @@ interface IEnvironment {
   DEV: boolean;
   googlePlacesKey?: string;
   appName: string;
+  ga4MeasurementId: string;
 }
 export const environment: IEnvironment = {
   apiURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:4005/api",
@@ -17,6 +18,7 @@ export const environment: IEnvironment = {
   DEV: process.env.NEXT_PUBLIC_NODE_ENV === "development",
   googlePlacesKey: process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY,
   appName: "BU Mobile Detailing",
+  ga4MeasurementId: process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID || "",
 };
 
 const axiosInstance = axios.create({
