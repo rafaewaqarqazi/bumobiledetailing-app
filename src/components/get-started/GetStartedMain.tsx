@@ -37,7 +37,9 @@ const GetStartedMain = () => {
   const router = useRouter();
 
   useEffect(() => {
-    ReactGA.initialize(environment.ga4MeasurementId);
+    if (environment.ga4MeasurementId && !environment.DEV) {
+      ReactGA.initialize(environment.ga4MeasurementId);
+    }
   }, []);
 
   const title = useMemo(() => {
