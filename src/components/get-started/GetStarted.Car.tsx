@@ -43,7 +43,7 @@ const GetStartedCar = ({
     <Row gutter={[16, 16]}>
       <Col xs={24} sm={8}>
         <Card
-          className=" hover:border-primary cursor-pointer group !p-1"
+          className={` hover:border-primary cursor-pointer group !p-1 ${car?.type === "coupe" ? "border-primary" : ""}`}
           onClick={onClick("coupe")}
         >
           <Image
@@ -60,7 +60,7 @@ const GetStartedCar = ({
       </Col>
       <Col xs={24} sm={8}>
         <Card
-          className=" hover:border-primary cursor-pointer group !p-1"
+          className={` hover:border-primary cursor-pointer group !p-1 ${car?.type === "sedan" ? "border-primary" : ""}`}
           onClick={onClick("sedan")}
         >
           <Image
@@ -77,7 +77,7 @@ const GetStartedCar = ({
       </Col>
       <Col xs={24} sm={8}>
         <Card
-          className=" hover:border-primary cursor-pointer group !p-1"
+          className={` hover:border-primary cursor-pointer group !p-1 ${car?.type === "suv" ? "border-primary" : ""}`}
           onClick={onClick("suv")}
         >
           <Image
