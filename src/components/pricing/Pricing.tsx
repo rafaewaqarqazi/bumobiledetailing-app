@@ -52,7 +52,7 @@ const Pricing = () => {
       <Space
         size={16}
         direction="vertical"
-        className="w-full max-h-[600px] overflow-y-auto"
+        className="w-full max-h-[400px] overflow-y-auto"
       >
         {selectedService?.servicePackages?.map((_package) => {
           const description = _package.package?.description
@@ -62,11 +62,7 @@ const Pricing = () => {
           const half = Math.ceil(descriptionLength / 2);
           return (
             <Card key={_package.package?.id} className="mt-4 !bg-bodyBG">
-              <Flex
-                gap={16}
-                wrap="wrap"
-                className="flex-col sm:flex-row sm:justify-center"
-              >
+              <Flex gap={16} className="flex-col sm:flex-row sm:justify-center">
                 <Flex align="center" className="flex-col">
                   <Image
                     src={_package.package?.image}
