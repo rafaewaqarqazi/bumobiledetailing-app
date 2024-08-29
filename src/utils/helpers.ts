@@ -1,5 +1,6 @@
 import { IAddOn } from "@/utils/crud/addOn.crud";
 import { IPackage } from "@/utils/crud/package.crud";
+import { PresetColorType, PresetStatusColorType } from "antd/lib/_util/colors";
 export const getErrorMsg = (err: any, customMsg?: string) =>
   (err.response?.data?.data?.details?.length &&
     err.response?.data?.data?.details?.[0]?.message) ||
@@ -135,3 +136,55 @@ export const getGAAddOns = ({
   });
   return _addOns;
 };
+export enum Statuses {
+  ACTIVE = 1,
+  IN_ACTIVE,
+  IN_PROGRESS,
+  EXPIRED,
+  ARCHIVE,
+  REFUNDED,
+  DELETED,
+  COMPLETED,
+  PARTIAL_REFUND,
+  CANCELLED,
+}
+export const StatusesText = {
+  [Statuses.ACTIVE]: "To-do",
+  [Statuses.IN_ACTIVE]: "Inactive",
+  [Statuses.IN_PROGRESS]: "In Progress",
+  [Statuses.EXPIRED]: "Expired",
+  [Statuses.ARCHIVE]: "Archive",
+  [Statuses.REFUNDED]: "Refunded",
+  [Statuses.DELETED]: "Deleted",
+  [Statuses.COMPLETED]: "Completed",
+  [Statuses.PARTIAL_REFUND]: "Partial Refund",
+  [Statuses.CANCELLED]: "Cancelled",
+};
+export const StatusesColor: {
+  [key: number]: PresetColorType | PresetStatusColorType;
+} = {
+  [Statuses.ACTIVE]: "blue-inverse",
+  [Statuses.IN_ACTIVE]: "geekblue-inverse",
+  [Statuses.IN_PROGRESS]: "gold-inverse",
+  [Statuses.EXPIRED]: "red-inverse",
+  [Statuses.ARCHIVE]: "volcano-inverse",
+  [Statuses.REFUNDED]: "purple-inverse",
+  [Statuses.DELETED]: "red-inverse",
+  [Statuses.COMPLETED]: "green-inverse",
+  [Statuses.PARTIAL_REFUND]: "magenta-inverse",
+  [Statuses.CANCELLED]: "red-inverse",
+};
+const capitalise = (item: string) =>
+  item?.includes("'")
+    ? item
+    : `${item.substring(0, 1).toUpperCase()}${item.substring(1).toLowerCase()}`;
+export const titleCase = (text: string = "") =>
+  !!text
+    ? text
+        ?.split(/[']/gm)
+        ?.map(capitalise)
+        ?.join("'")
+        ?.split(/\s/gm)
+        ?.map(capitalise)
+        ?.join(" ")
+    : "";

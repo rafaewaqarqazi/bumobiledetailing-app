@@ -11,10 +11,12 @@ import {
   Space,
   Table,
   TableColumnsType,
+  Tag,
 } from "antd";
 import { useInputSearch } from "@/hooks/input.search.hooks";
 import {
   DeleteOutlined,
+  EditOutlined,
   MoreOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
@@ -23,6 +25,10 @@ import {
   dateFormat,
   getErrorMsg,
   showTotal,
+  Statuses,
+  StatusesColor,
+  StatusesText,
+  titleCase,
 } from "@/utils/helpers";
 import dayjs from "dayjs";
 import { bookingCrud } from "@/utils/crud/booking.crud";
@@ -30,6 +36,7 @@ import { ICustomer } from "@/utils/crud/customer.crud";
 import { IService } from "@/utils/crud/service.crud";
 import { IPackage } from "@/utils/crud/package.crud";
 import { ISchedule } from "@/utils/crud/schedule.crud";
+import Link from "next/link";
 
 const Bookings = () => {
   const [pagination, setPagination] = useState({
@@ -108,6 +115,23 @@ const Bookings = () => {
           schedule ? `${schedule.date} ${schedule.timeslot.time}` : "--",
       },
       {
+        title: "Status",
+        dataIndex: "statusId",
+        render: (statusId: Statuses) => (
+          <Tag color={StatusesColor[3]}>{StatusesText[statusId]}</Tag>
+        ),
+      },
+      {
+        title: "Employee",
+        dataIndex: "serviceAssignments",
+        render: (serviceAssignments: any) => (
+          <Tag>
+            {titleCase(`${serviceAssignments?.[0]?.employee?.firstName || "--"}
+            ${serviceAssignments?.[0]?.employee?.lastName || ""}`)}
+          </Tag>
+        ),
+      },
+      {
         title: "Created At",
         dataIndex: "createdAt",
         render: (date: string) => dayjs(date).format(dateFormat),
@@ -119,6 +143,13 @@ const Bookings = () => {
           <Dropdown
             menu={{
               items: [
+                {
+                  key: "0",
+                  label: (
+                    <Link href={`/admin/bookings/edit/${record.id}`}>Edit</Link>
+                  ),
+                  icon: <EditOutlined />,
+                },
                 {
                   key: "delete",
                   label: "Delete",

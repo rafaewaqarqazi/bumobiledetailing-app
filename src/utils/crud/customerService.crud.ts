@@ -10,6 +10,7 @@ const CUSTOMER_SERVICE_URL = "/customer-service";
 
 export interface ICustomerAddOn {
   id: number;
+  quantity: number;
   customer: ICustomer;
   addOn: IAddOn;
 }
