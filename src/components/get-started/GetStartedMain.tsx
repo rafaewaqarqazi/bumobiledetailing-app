@@ -229,7 +229,11 @@ const GetStartedMain = () => {
         </FormItem>
         {step === 7 && (
           <>
-            <GetStartedSummary addOns={addOns} code={code} />
+            <GetStartedSummary
+              addOns={addOns}
+              code={code}
+              customer={customer}
+            />
             <GetStartedTermsOfService />
             {code && code.code && (
               <Flex justify="space-between" className="mb-4">

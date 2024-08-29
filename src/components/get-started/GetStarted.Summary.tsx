@@ -9,19 +9,23 @@ import {
   getTotalPrice,
 } from "@/utils/helpers";
 import { IPackage } from "@/utils/crud/package.crud";
-import Icon, { ClockCircleOutlined } from "@ant-design/icons";
+import Icon, { ClockCircleOutlined, PushpinOutlined } from "@ant-design/icons";
 import { IAddOn } from "@/utils/crud/addOn.crud";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import ReactGA from "react-ga4";
 import { environment } from "@/utils/config";
 import { ICoupon } from "@/utils/crud/coupon.crud";
+import dayjs from "dayjs";
+import { ICustomer } from "@/utils/crud/customer.crud";
 
 const GetStartedSummary = ({
   addOns,
   code,
+  customer,
 }: {
   addOns: IAddOn[];
   code: ICoupon | null;
+  customer: ICustomer | null;
 }) => {
   const form = Form.useFormInstance();
   const _package: IPackage = Form.useWatch("package", form);
@@ -179,10 +183,19 @@ const GetStartedSummary = ({
             );
           })}
         <Divider />
-
-        <Title level={5} className="!mt-0">
-          <ClockCircleOutlined /> {timeslot?.date} {timeslot?.timeslot?.time}
-        </Title>
+        <Flex gap={8} className="mb-4" align="center">
+          <ClockCircleOutlined className="text-xl" />
+          <Title level={5} className="!m-0">
+            {dayjs(timeslot?.date, "YYYY-MM-DD").format("dddd, DD MMMM YYYY")}{" "}
+            at {dayjs(timeslot?.timeslot?.time, "HH:mm").format("hh:mm A")}
+          </Title>
+        </Flex>
+        <Flex gap={8} className="mb-4" align="center">
+          <PushpinOutlined className="text-xl" />
+          <Title level={5} className="!m-0">
+            {customer?.address}
+          </Title>
+        </Flex>
       </Card>
     </div>
   );

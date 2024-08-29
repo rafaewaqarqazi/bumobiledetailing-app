@@ -43,24 +43,7 @@ const GetStartedCar = ({
     <Row gutter={[16, 16]}>
       <Col xs={24} sm={8}>
         <Card
-          className={` hover:border-primary cursor-pointer group !p-1 ${car?.type === "coupe" ? "border-primary" : ""}`}
-          onClick={onClick("coupe")}
-        >
-          <Image
-            src="/images/vehicle/coupe.png"
-            alt="coupe"
-            width={64}
-            height={64}
-            className="group-hover:scale-105 transition ease-in-out rounded-full"
-          />
-          <Title level={5} className=" !mt-4 !mb-0 group-hover:!text-primary">
-            Coupe
-          </Title>
-        </Card>
-      </Col>
-      <Col xs={24} sm={8}>
-        <Card
-          className={` hover:border-primary cursor-pointer group !p-1 ${car?.type === "sedan" ? "border-primary" : ""}`}
+          className={` hover:border-primary cursor-pointer group !p-1 ${car?.type === "sedan" ? "!border-primary" : ""}`}
           onClick={onClick("sedan")}
         >
           <Image
@@ -77,7 +60,7 @@ const GetStartedCar = ({
       </Col>
       <Col xs={24} sm={8}>
         <Card
-          className={` hover:border-primary cursor-pointer group !p-1 ${car?.type === "suv" ? "border-primary" : ""}`}
+          className={` hover:border-primary cursor-pointer group !p-1 ${car?.type === "suv" ? "!border-primary" : ""}`}
           onClick={onClick("suv")}
         >
           <Image
@@ -89,6 +72,23 @@ const GetStartedCar = ({
           />
           <Title level={5} className=" !mt-4 !mb-0 group-hover:!text-primary">
             SUV
+          </Title>
+        </Card>
+      </Col>
+      <Col xs={24} sm={8}>
+        <Card
+          className={` hover:border-primary cursor-pointer group !p-1 ${car?.type === "truck" ? "!border-primary" : ""}`}
+          onClick={onClick("truck")}
+        >
+          <Image
+            src="/images/vehicle/truck.png"
+            alt="truck"
+            width={64}
+            height={64}
+            className="group-hover:scale-105 transition ease-in-out rounded-full"
+          />
+          <Title level={5} className=" !mt-4 !mb-0 group-hover:!text-primary">
+            Truck
           </Title>
         </Card>
       </Col>
