@@ -36,7 +36,7 @@ const Pricing = () => {
   );
   return (
     <div className="p-4">
-      <Flex gap={16} justify="center" className="mb-4">
+      <Flex gap={16} justify="center" wrap="wrap" className="mb-4">
         {services?.map((service) => (
           <Button
             key={service.id}
@@ -61,7 +61,7 @@ const Pricing = () => {
               <Flex
                 gap={16}
                 wrap="wrap"
-                className="flex-col md:flex-row md:justify-center"
+                className="flex-col sm:flex-row sm:justify-center"
               >
                 <Flex align="center" className="flex-col">
                   <Image
@@ -77,20 +77,16 @@ const Pricing = () => {
                     {_package?.package?.displayName}
                   </Title>
                 </Flex>
-                <div className="bg-white rounded-xl p-4 flex-grow md:max-w-lg">
+                <div className="bg-white rounded-xl p-4 flex-grow sm:max-w-lg">
                   <Row>
                     <Col xs={24} sm={12}>
                       {description.slice(0, half).map((line) => (
-                        <Paragraph className="whitespace-pre" key={line}>
-                          {line}
-                        </Paragraph>
+                        <Paragraph key={line}>{line}</Paragraph>
                       ))}
                     </Col>
                     <Col xs={24} sm={12}>
                       {description.slice(half).map((line) => (
-                        <Paragraph className="whitespace-pre" key={line}>
-                          {line}
-                        </Paragraph>
+                        <Paragraph key={line}>{line}</Paragraph>
                       ))}
                     </Col>
                   </Row>
@@ -112,7 +108,7 @@ const Pricing = () => {
                       type={_package.isPopular ? "primary" : "default"}
                       danger={_package.isPopular}
                       size="large"
-                      className="w-full md:w-48"
+                      className="w-full sm:w-48"
                     >
                       Purchase now
                     </Button>
