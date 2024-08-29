@@ -76,43 +76,43 @@ const Bookings = () => {
       {
         title: "First Name",
         dataIndex: "customer",
-        render: (customer: ICustomer) => customer.firstName,
+        render: (customer: ICustomer) => customer?.firstName,
       },
       {
         title: "Last Name",
         dataIndex: "customer",
-        render: (customer: ICustomer) => customer.lastName,
+        render: (customer: ICustomer) => customer?.lastName,
       },
       {
         title: "Email",
         dataIndex: "customer",
-        render: (customer: ICustomer) => customer.email,
+        render: (customer: ICustomer) => customer?.email,
       },
       {
         title: "Phone",
         dataIndex: "customer",
-        render: (customer: ICustomer) => customer.phone,
+        render: (customer: ICustomer) => customer?.phone,
       },
       {
         title: "Service",
         dataIndex: "service",
-        render: (service: IService) => service.name,
+        render: (service: IService) => service?.name,
       },
       {
         title: "Package",
         dataIndex: "package",
-        render: (_package: IPackage) => _package.name,
+        render: (_package: IPackage) => _package?.name,
       },
       {
         title: "Total Price",
         render: (record: any) =>
-          currencyFormatter.format(record.quote?.quotedAmount || 0),
+          currencyFormatter.format(record?.quote?.quotedAmount || 0),
       },
       {
         title: "Timeslot",
         dataIndex: "schedule",
         render: (schedule: ISchedule) =>
-          schedule ? `${schedule.date} ${schedule.timeslot.time}` : "--",
+          schedule ? `${schedule?.date} ${schedule?.timeslot?.time}` : "--",
       },
       {
         title: "Status",
