@@ -94,27 +94,27 @@ const GetStartedMain = () => {
     });
     let discountAmount = 0;
     if (code) {
-      if (code.discountPercentage) {
-        return (total * Number(code.discountPercentage)) / 100;
+      if (code?.discountPercentage) {
+        return (total * Number(code?.discountPercentage)) / 100;
       } else {
-        return Number(code.discountAmount);
+        return Number(code?.discountAmount);
       }
     }
-    const totalPrice = (total - discountAmount).toFixed(2);
+    const totalPrice = (Number(total) - Number(discountAmount))?.toFixed(2);
     bookingCrud
       .create({
         vehicle: {
           type: values.car?.type,
-          make: carInfo[1],
-          model: carInfo[2],
-          year: carInfo[0],
+          make: carInfo?.[1],
+          model: carInfo?.[2],
+          year: carInfo?.[0],
         },
-        service: values.service.id,
-        package: values.package.id,
+        service: values.service?.id,
+        package: values.package?.id,
         customerAddOns: values.customerAddOns,
         timeslot: {
-          date: values.timeslot.date,
-          timeslot: values.timeslot.timeslot.id,
+          date: values.timeslot?.date,
+          timeslot: values.timeslot?.timeslot?.id,
         },
         customer: customer?.id,
         totalPrice: `${totalPrice}`,

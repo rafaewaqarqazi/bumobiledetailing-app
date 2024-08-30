@@ -104,7 +104,7 @@ const GetStartedCar = ({
                 required: true,
                 message: "Please input the info of your car!",
                 pattern: new RegExp(
-                  /^[0-9]{4}\s\/[a-zA-Z0-9\s]+\/[a-zA-Z0-9\s]+$/,
+                  /^[0-9]{4}\s*\/\s*[a-zA-Z0-9\s]+\s*\/\s*[a-zA-Z0-9\s]+$/,
                 ),
               },
             ]}

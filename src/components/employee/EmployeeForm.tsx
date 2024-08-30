@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Form, Input, message, Row } from "antd";
+import { Button, Card, Checkbox, Col, Form, Input, message, Row } from "antd";
 import { useEmployee } from "@/hooks/employee.hooks";
 import { FormItem } from "@/components/antd-sub-components";
 import { employeeCrud } from "@/utils/crud/employee.crud";
 import { useRouter } from "next/navigation";
 import { getErrorMsg } from "@/utils/helpers";
 import MaskedInputWrapper from "@/components/input/MaskedInputWrapper";
+import { CheckboxChangeEvent } from "antd/lib/checkbox";
 
 const EmployeeForm = () => {
   const { employee } = useEmployee();
@@ -41,13 +42,13 @@ const EmployeeForm = () => {
         setLoading(false);
       });
   };
-  // const handleGeneratePassword = (event: CheckboxChangeEvent) => {
-  //   if (event.target.checked) {
-  //     const password = Math.random().toString(36).slice(2);
-  //     const field = employee?.id ? "newPassword" : "password";
-  //     form.setFieldsValue({ [field]: password });
-  //   }
-  // };
+  const handleGeneratePassword = (event: CheckboxChangeEvent) => {
+    if (event.target.checked) {
+      const password = Math.random().toString(36).slice(2);
+      const field = employee?.id ? "newPassword" : "password";
+      form.setFieldsValue({ [field]: password });
+    }
+  };
   return (
     <Card title="Add Employee">
       <Form
@@ -100,31 +101,31 @@ const EmployeeForm = () => {
               <Input size="large" placeholder="johnsmith@gmail.com" />
             </FormItem>
           </Col>
-          {/*<Col xs={24} sm={12}>*/}
-          {/*  <Form.Item*/}
-          {/*    label={"Password"}*/}
-          {/*    name={employee?.id ? "newPassword" : "password"}*/}
-          {/*    rules={[*/}
-          {/*      {*/}
-          {/*        required: !employee?.id,*/}
-          {/*        message: "Please input password!",*/}
-          {/*      },*/}
-          {/*    ]}*/}
-          {/*    style={{ marginBottom: 0 }}*/}
-          {/*  >*/}
-          {/*    <Input.Password*/}
-          {/*      autoComplete="new-password"*/}
-          {/*      size="large"*/}
-          {/*      placeholder="Password"*/}
-          {/*    />*/}
-          {/*  </Form.Item>*/}
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={"Password"}
+              name={employee?.id ? "newPassword" : "password"}
+              rules={[
+                {
+                  required: !employee?.id,
+                  message: "Please input password!",
+                },
+              ]}
+              style={{ marginBottom: 0 }}
+            >
+              <Input.Password
+                autoComplete="new-password"
+                size="large"
+                placeholder="Password"
+              />
+            </Form.Item>
 
-          {/*  <Form.Item>*/}
-          {/*    <Checkbox onChange={handleGeneratePassword}>*/}
-          {/*      Auto Generate*/}
-          {/*    </Checkbox>*/}
-          {/*  </Form.Item>*/}
-          {/*</Col>*/}
+            <Form.Item>
+              <Checkbox onChange={handleGeneratePassword}>
+                Auto Generate
+              </Checkbox>
+            </Form.Item>
+          </Col>
           <Col xs={24} sm={12}>
             <FormItem
               name="phone"
@@ -148,7 +149,7 @@ const EmployeeForm = () => {
               />
             </FormItem>
           </Col>
-          <Col xs={24} sm={12}>
+          <Col xs={24}>
             <FormItem
               name="position"
               label="Position"
