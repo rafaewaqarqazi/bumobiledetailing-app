@@ -12,6 +12,7 @@ interface IEnvironment {
   appName: string;
   ga4MeasurementId: string;
   gtmKey?: string;
+  gAdsKey?: string;
 }
 export const environment: IEnvironment = {
   apiURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:4005/api",
@@ -21,6 +22,7 @@ export const environment: IEnvironment = {
   appName: "BU Mobile Detailing",
   ga4MeasurementId: process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID || "",
   gtmKey: process.env.NEXT_PUBLIC_GTM_KEY,
+  gAdsKey: process.env.NEXT_PUBLIC_GADS_KEY,
 };
 
 const axiosInstance = axios.create({

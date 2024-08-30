@@ -144,6 +144,14 @@ const GetStartedMain = () => {
             ..._addOns,
           ],
         });
+        if ((window as any)?.gtag) {
+          (window as any)?.gtag("event", "conversion", {
+            send_to: `${environment.gAdsKey}/6zOrCOytwM4ZEImMhZE-`,
+            value: totalPrice,
+            currency: "USD",
+          });
+        }
+
         router.push(`/get-started/thankyou/${values?.package?.id}`);
       })
       .catch((err) => {

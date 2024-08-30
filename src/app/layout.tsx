@@ -19,14 +19,25 @@ const RootLayout = async ({ children }: React.PropsWithChildren) => {
     <StoreProvider withPersistor={false} session={session}>
       <html lang="en">
         <head>
-          {environment.DEV && (
-            <Script id="gtm-script" strategy="afterInteractive">
-              {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          {!environment.DEV && (
+            <>
+              <Script id="gtm-script" strategy="afterInteractive">
+                {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','${environment.gtmKey}');`}
-            </Script>
+              </Script>
+              <Script
+                src={`https://www.googletagmanager.com/gtag/js?id=${environment.gAdsKey}`}
+              />
+              <Script id="gtm-script2" strategy="afterInteractive">
+                {`window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '${environment.gAdsKey}');`}
+              </Script>
+            </>
           )}
         </head>
         <body>
