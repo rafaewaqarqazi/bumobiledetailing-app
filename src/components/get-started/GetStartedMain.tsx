@@ -144,18 +144,11 @@ const GetStartedMain = () => {
             ..._addOns,
           ],
         });
-        // ReactGA.event("conversion", {
-        //   send_to: `${environment.gAdsKey}/6zOrCOytwM4ZEImMhZE-`,
-        //   value: totalPrice,
-        //   currency: "USD",
-        // });
-        if ((window as any)?.gtag) {
-          (window as any)?.gtag("event", "conversion", {
-            send_to: `${environment.gAdsKey}/6zOrCOytwM4ZEImMhZE-`,
-            value: totalPrice,
-            currency: "USD",
-          });
-        }
+        ReactGA.event("conversion", {
+          send_to: `${environment.gAdsKey}/6zOrCOytwM4ZEImMhZE-`,
+          value: totalPrice,
+          currency: "USD",
+        });
 
         router.push(`/get-started/thankyou/${values?.package?.id}`);
       })
