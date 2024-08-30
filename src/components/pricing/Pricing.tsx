@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Paragraph, Title } from "@/components/antd-sub-components";
 import { currencyFormatter } from "@/utils/helpers";
 import Link from "next/link";
+import { IServicePackage } from "@/utils/crud/service.crud";
 
 const Pricing = () => {
   const [active, setActive] = useState(0);
@@ -50,70 +51,75 @@ const Pricing = () => {
         ))}
       </Flex>
       <Space size={16} direction="vertical" className="w-full">
-        {selectedService?.servicePackages?.map((_package) => {
-          const description = _package.package?.description
-            ?.split("\n")
-            .filter(Boolean);
-          const descriptionLength = description?.length || 0;
-          const half = Math.ceil(descriptionLength / 2);
-          return (
-            <Card key={_package.package?.id} className="mt-4 !bg-bodyBG">
-              <Flex gap={16} className="flex-col sm:flex-row sm:justify-center">
-                <Flex align="center" className="flex-col">
-                  <Image
-                    src={_package.package?.image}
-                    alt={_package.package?.name}
-                    width={140}
-                    height={140}
-                  />
-                  <Title
-                    level={4}
-                    className="!mt-0 !text-center !font-extrabold"
-                  >
-                    {_package?.package?.displayName}
-                  </Title>
+        {selectedService?.servicePackages
+          ?.sort((a: IServicePackage, b: IServicePackage) => a.rank - b.rank)
+          ?.map((_package) => {
+            const description = _package.package?.description
+              ?.split("\n")
+              .filter(Boolean);
+            const descriptionLength = description?.length || 0;
+            const half = Math.ceil(descriptionLength / 2);
+            return (
+              <Card key={_package.package?.id} className="mt-4 !bg-bodyBG">
+                <Flex
+                  gap={16}
+                  className="flex-col sm:flex-row sm:justify-center"
+                >
+                  <Flex align="center" className="flex-col">
+                    <Image
+                      src={_package.package?.image}
+                      alt={_package.package?.name}
+                      width={140}
+                      height={140}
+                    />
+                    <Title
+                      level={4}
+                      className="!mt-0 !text-center !font-extrabold"
+                    >
+                      {_package?.package?.displayName}
+                    </Title>
+                  </Flex>
+                  <div className="bg-white rounded-xl p-4 flex-grow sm:max-w-lg">
+                    <Row>
+                      <Col xs={24} sm={12}>
+                        {description.slice(0, half).map((line) => (
+                          <Paragraph key={line}>{line}</Paragraph>
+                        ))}
+                      </Col>
+                      <Col xs={24} sm={12}>
+                        {description.slice(half).map((line) => (
+                          <Paragraph key={line}>{line}</Paragraph>
+                        ))}
+                      </Col>
+                    </Row>
+                  </div>
+                  <div>
+                    {_package?.isPopular && (
+                      <Tag
+                        color="red-inverse"
+                        className="!absolute top-4 right-4"
+                      >
+                        Popular
+                      </Tag>
+                    )}
+                    <Title level={2} className=" !text-center !font-extrabold">
+                      {currencyFormatter.format(_package?.package?.price)}
+                    </Title>
+                    <Link href={"/get-started"}>
+                      <Button
+                        type={_package.isPopular ? "primary" : "default"}
+                        danger={_package.isPopular}
+                        size="large"
+                        className="w-full sm:w-48"
+                      >
+                        Book & Save
+                      </Button>
+                    </Link>
+                  </div>
                 </Flex>
-                <div className="bg-white rounded-xl p-4 flex-grow sm:max-w-lg">
-                  <Row>
-                    <Col xs={24} sm={12}>
-                      {description.slice(0, half).map((line) => (
-                        <Paragraph key={line}>{line}</Paragraph>
-                      ))}
-                    </Col>
-                    <Col xs={24} sm={12}>
-                      {description.slice(half).map((line) => (
-                        <Paragraph key={line}>{line}</Paragraph>
-                      ))}
-                    </Col>
-                  </Row>
-                </div>
-                <div>
-                  {_package?.isPopular && (
-                    <Tag
-                      color="red-inverse"
-                      className="!absolute top-4 right-4"
-                    >
-                      Popular
-                    </Tag>
-                  )}
-                  <Title level={2} className=" !text-center !font-extrabold">
-                    {currencyFormatter.format(_package?.package?.price)}
-                  </Title>
-                  <Link href={"/get-started"}>
-                    <Button
-                      type={_package.isPopular ? "primary" : "default"}
-                      danger={_package.isPopular}
-                      size="large"
-                      className="w-full sm:w-48"
-                    >
-                      Purchase now
-                    </Button>
-                  </Link>
-                </div>
-              </Flex>
-            </Card>
-          );
-        })}
+              </Card>
+            );
+          })}
       </Space>
     </div>
   );
