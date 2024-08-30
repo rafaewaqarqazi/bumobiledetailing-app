@@ -49,11 +49,7 @@ const Pricing = () => {
           </Button>
         ))}
       </Flex>
-      <Space
-        size={16}
-        direction="vertical"
-        className="w-full max-h-[400px] overflow-y-auto"
-      >
+      <Space size={16} direction="vertical" className="w-full">
         {selectedService?.servicePackages?.map((_package) => {
           const description = _package.package?.description
             ?.split("\n")

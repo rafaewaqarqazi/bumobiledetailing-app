@@ -31,7 +31,7 @@ const RootLayout = async ({ children }: React.PropsWithChildren) => {
         </head>
         <body>
           <AntdRegistry>
-            <main className="flex min-h-screen flex-col">{children}</main>
+            <main className="flex flex-grow flex-col">{children}</main>
           </AntdRegistry>
         </body>
       </html>
