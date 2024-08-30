@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { Layout, Menu } from "antd";
+import { Flex, Layout, Menu } from "antd";
 import {
   LayoutContent,
   LayoutSider,
@@ -26,6 +26,7 @@ import { useSidebarContext } from "@/context/SidebarContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Header from "@/components/header/Header";
+import Image from "next/image";
 const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
   const screen = useBreakpoint();
   const { isOn, toggleOn } = useSidebarContext();
@@ -106,9 +107,21 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
         breakpoint={"sm"}
         className="!fixed md:!relative z-10 top-0 bottom-0 left-0"
       >
-        <Title level={3} className=" text-center !mt-3 mb-4">
-          {isOn ? "MD" : "BU Mobile Detailing"}{" "}
-        </Title>
+        {isOn ? (
+          <Title level={3} className=" text-center !mt-3 mb-4 !font-extrabold">
+            BU
+          </Title>
+        ) : (
+          <Flex justify={"center"}>
+            <Image
+              src={"/images/bumd-logo.png"}
+              alt={"BU Mobile Detailing"}
+              width={160}
+              height={80}
+              className="object-contain"
+            />
+          </Flex>
+        )}
         {!screen.sm && !isOn && (
           <MenuFoldOutlined
             className="text-lg absolute z-20 -right-4 top-6"
