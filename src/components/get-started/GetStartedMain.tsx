@@ -95,9 +95,9 @@ const GetStartedMain = () => {
     let discountAmount = 0;
     if (code) {
       if (code?.discountPercentage) {
-        return (total * Number(code?.discountPercentage)) / 100;
+        discountAmount = (total * Number(code?.discountPercentage)) / 100;
       } else {
-        return Number(code?.discountAmount);
+        discountAmount = Number(code?.discountAmount);
       }
     }
     const totalPrice = (Number(total) - Number(discountAmount))?.toFixed(2);
@@ -279,6 +279,7 @@ const GetStartedMain = () => {
                       block={!code}
                       loading={loadingCoupon}
                       onClick={onApplyCoupon}
+                      htmlType="button"
                     >
                       Apply
                     </Button>
