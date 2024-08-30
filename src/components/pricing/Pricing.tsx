@@ -7,7 +7,7 @@ import { Paragraph, Title } from "@/components/antd-sub-components";
 import { currencyFormatter } from "@/utils/helpers";
 import Link from "next/link";
 import { IServicePackage } from "@/utils/crud/service.crud";
-
+import "@/assets/styles/pricing.scss";
 const Pricing = () => {
   const [active, setActive] = useState(0);
   const { services } = useServices({});
