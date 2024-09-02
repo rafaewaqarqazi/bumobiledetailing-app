@@ -8,14 +8,17 @@ import { ICustomer } from "@/utils/crud/customer.crud";
 const GetStartedCar = ({
   next,
   customer,
+  sendHeight,
 }: {
   next: () => void;
   customer?: ICustomer | null;
+  sendHeight: () => void;
 }) => {
   const form = Form.useFormInstance();
   const car: IVehicle & { info: string } = Form.useWatch("car", form);
   const onClick = (car: string) => () => {
     form.setFieldValue("car", { type: car });
+    sendHeight();
   };
   const onClickNext = () => {
     form

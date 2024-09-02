@@ -222,7 +222,11 @@ const GetStartedMain = () => {
       )}
       <Form layout="vertical" size="small" form={form} onFinish={onFinish}>
         <FormItem name="car" className={`${step !== 2 ? "hidden" : ""} !mb-0`}>
-          <GetStartedCar next={next} customer={customer} />
+          <GetStartedCar
+            next={next}
+            customer={customer}
+            sendHeight={sendHeight}
+          />
         </FormItem>
         <FormItem
           name="service"
