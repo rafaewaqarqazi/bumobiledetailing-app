@@ -23,7 +23,7 @@ import { usePathname, useRouter } from "next/navigation";
 import ReactGA from "react-ga4";
 import { environment } from "@/utils/config";
 import { couponCrud, ICoupon } from "@/utils/crud/coupon.crud";
-import "@/assets/styles/pricing.scss";
+
 const GetStartedMain = () => {
   const [form] = Form.useForm();
   const [step, setStep] = useState(1);
