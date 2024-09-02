@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Card, Col, Divider, Form, Input, Row } from "antd";
 import { FormItem, Title } from "@/components/antd-sub-components";
 import Image from "next/image";
@@ -18,8 +18,12 @@ const GetStartedCar = ({
   const car: IVehicle & { info: string } = Form.useWatch("car", form);
   const onClick = (car: string) => () => {
     form.setFieldValue("car", { type: car });
-    sendHeight();
   };
+  useEffect(() => {
+    if (car) {
+      sendHeight();
+    }
+  }, [car]);
   const onClickNext = () => {
     form
       .validateFields([["car", "info"]])
