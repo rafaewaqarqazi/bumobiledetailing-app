@@ -35,7 +35,19 @@ const GetStartedMain = () => {
   const [loadingCoupon, setLoadingCoupon] = useState(false);
   const { addOns } = useAddOns({});
   const router = useRouter();
+  const sendHeight = () => {
+    const height = document.body.scrollHeight;
+    window.parent.postMessage(height, "*");
+  };
+  useEffect(() => {
+    sendHeight();
+  }, [step]);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
+    window.onload = sendHeight;
+    window.onresize = sendHeight;
+  }, []);
   useEffect(() => {
     if (environment.ga4MeasurementId && !environment.DEV) {
       ReactGA.initialize(environment.ga4MeasurementId);
