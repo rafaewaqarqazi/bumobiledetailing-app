@@ -19,11 +19,11 @@ import { bookingCrud } from "@/utils/crud/booking.crud";
 import { getErrorMsg, getGAAddOns, getTotalPrice } from "@/utils/helpers";
 import { useAddOns } from "@/hooks/addOns.hooks";
 import { IVehicle } from "@/utils/crud/vehicle.crud";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import ReactGA from "react-ga4";
 import { environment } from "@/utils/config";
 import { couponCrud, ICoupon } from "@/utils/crud/coupon.crud";
-
+import "@/assets/styles/pricing.scss";
 const GetStartedMain = () => {
   const [form] = Form.useForm();
   const [step, setStep] = useState(1);
@@ -35,6 +35,7 @@ const GetStartedMain = () => {
   const [loadingCoupon, setLoadingCoupon] = useState(false);
   const { addOns } = useAddOns({});
   const router = useRouter();
+  const pathname = usePathname();
   const sendHeight = () => {
     const height = document.body.scrollHeight;
     window.parent.postMessage(height, "*");
@@ -162,7 +163,9 @@ const GetStartedMain = () => {
           currency: "USD",
         });
 
-        router.push(`/get-started/thankyou/${values?.package?.id}`);
+        router.push(
+          `/get-started${pathname?.includes("-popup") ? "-popup" : ""}/thankyou/${values?.package?.id}`,
+        );
       })
       .catch((err) => {
         message.error(getErrorMsg(err));
