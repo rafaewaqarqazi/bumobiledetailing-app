@@ -106,7 +106,7 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
         icon: <PercentageOutlined />,
       },
       {
-        key: "sms-dashboard",
+        key: "sms",
         label: (
           <Link href="/admin/sms-dashboard">
             SMS Dashboard
