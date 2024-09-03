@@ -10,6 +10,7 @@ import { componentsTheme, tokenTheme } from "@/utils/theme";
 import { SidebarProvider } from "@/context/SidebarContext";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { SocketProvider } from "@/context/SocketContext";
 
 export default function StoreProvider({
   withPersistor,
@@ -37,13 +38,15 @@ export default function StoreProvider({
       >
         <Provider store={store}>
           <SidebarProvider>
-            {persistorRef.current ? (
-              <PersistGate persistor={persistorRef.current}>
-                {children}
-              </PersistGate>
-            ) : (
-              children
-            )}
+            <SocketProvider>
+              {persistorRef.current ? (
+                <PersistGate persistor={persistorRef.current}>
+                  {children}
+                </PersistGate>
+              ) : (
+                children
+              )}
+            </SocketProvider>
           </SidebarProvider>
         </Provider>
       </ConfigProvider>

@@ -23,6 +23,7 @@ import {
 import {
   currencyFormatter,
   dateFormat,
+  formatPhone,
   getErrorMsg,
   showTotal,
   Statuses,
@@ -91,7 +92,7 @@ const Bookings = () => {
       {
         title: "Phone",
         dataIndex: "customer",
-        render: (customer: ICustomer) => customer?.phone,
+        render: (customer: ICustomer) => formatPhone(customer?.phone),
       },
       {
         title: "Service",

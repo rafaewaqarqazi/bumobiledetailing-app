@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { Flex, Layout, Menu } from "antd";
+import { Badge, Flex, Layout, Menu } from "antd";
 import {
   LayoutContent,
   LayoutSider,
@@ -17,7 +17,9 @@ import {
   ClockCircleOutlined,
   DashboardOutlined,
   MenuFoldOutlined,
+  MessageOutlined,
   PercentageOutlined,
+  RobotOutlined,
   ScheduleOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -27,10 +29,29 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Header from "@/components/header/Header";
 import Image from "next/image";
+import { useSocket } from "@/context/SocketContext";
+import { Colors } from "@/utils/helpers";
 const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
   const screen = useBreakpoint();
   const { isOn, toggleOn } = useSidebarContext();
+  const [unseenCount, setUnseenCount] = useState(0);
+  const socket = useSocket();
   const pathname = usePathname();
+  useEffect(() => {
+    socket?.emit("get-unseen-count", (res: number) => {
+      setUnseenCount(res);
+    });
+    socket?.on("seen-updated", (res) => {
+      setUnseenCount(res);
+    });
+    socket?.on("new-sms", () => {
+      setUnseenCount((prevState) => Number(prevState) + 1);
+    });
+    return () => {
+      socket?.off("seen-updated");
+      socket?.off("new-sms");
+    };
+  }, [socket]);
   const items = useMemo(
     () => [
       {
@@ -83,6 +104,28 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
         key: "coupon",
         label: <Link href="/admin/coupons">Coupons</Link>,
         icon: <PercentageOutlined />,
+      },
+      {
+        key: "sms-dashboard",
+        label: (
+          <Link href="/admin/sms-dashboard">
+            SMS Dashboard
+            {unseenCount > 0 && (
+              <Badge
+                count={unseenCount}
+                color={Colors.danger}
+                overflowCount={9}
+                className="!absolute right-1 z-10 top-2"
+              />
+            )}
+          </Link>
+        ),
+        icon: <MessageOutlined />,
+      },
+      {
+        key: "agents",
+        label: <Link href="/admin/agents">Agents</Link>,
+        icon: <RobotOutlined />,
       },
     ],
     [],

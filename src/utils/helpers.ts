@@ -188,3 +188,24 @@ export const titleCase = (text: string = "") =>
         ?.map(capitalise)
         ?.join(" ")
     : "";
+export const sanitizePhoneNumber = (phone: string) =>
+  phone
+    ?.replace(/\s/, "")
+    .replace("(", "")
+    .replace(")", "")
+    .replace(/[-]/g, "");
+
+export const formatPhone = (phone: string) => {
+  const cleaned = ("" + phone).replace(/\D/g, "");
+  const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+  if (match) {
+    return "(" + match[1] + ") " + match[2] + "-" + match[3];
+  }
+  return null;
+};
+export enum AgentTypesEnums {
+  SMS = "SMS",
+}
+export const AgentText = {
+  [AgentTypesEnums.SMS]: "SMS",
+};

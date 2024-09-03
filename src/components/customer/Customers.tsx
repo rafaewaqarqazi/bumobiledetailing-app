@@ -18,7 +18,12 @@ import {
   MoreOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { dateFormat, getErrorMsg, showTotal } from "@/utils/helpers";
+import {
+  dateFormat,
+  formatPhone,
+  getErrorMsg,
+  showTotal,
+} from "@/utils/helpers";
 import dayjs from "dayjs";
 import { customerCrud } from "@/utils/crud/customer.crud";
 
@@ -72,6 +77,7 @@ const Customers = () => {
       {
         title: "Phone",
         dataIndex: "phone",
+        render: (phone: string) => formatPhone(phone),
       },
       {
         title: "Created At",

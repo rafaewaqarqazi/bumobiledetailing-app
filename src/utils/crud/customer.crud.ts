@@ -1,5 +1,8 @@
 import { PreferencesTypes } from "@/utils/enums";
 import { axiosInstance } from "@/utils/config";
+import { IVehicle } from "@/utils/crud/vehicle.crud";
+import { ICustomerService } from "@/utils/crud/customerService.crud";
+import { ISMSConversation } from "@/utils/crud/sms.crud";
 
 const CUSTOMER_URL = "/customer";
 export interface ICustomer {
@@ -13,6 +16,9 @@ export interface ICustomer {
   state: string;
   zipCode: string;
   country: string;
+  vehicles: IVehicle[];
+  customerServices: ICustomerService[];
+  smsConversations: ISMSConversation[];
   preferences: {
     id?: number;
     type: PreferencesTypes;

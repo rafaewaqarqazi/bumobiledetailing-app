@@ -22,6 +22,7 @@ export interface ICustomerService {
   schedule: ISchedule;
   customerAddOns: ICustomerAddOn[];
   vehicle: IVehicle;
+  createdAt: Date;
 }
 interface ICustomerServiceInput {
   customer: number;
