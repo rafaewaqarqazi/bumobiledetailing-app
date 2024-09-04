@@ -11,7 +11,7 @@ export const SocketProvider = ({ children }: React.PropsWithChildren) => {
 
   useEffect(() => {
     const newSocket = io(environment.apiURL?.replace("/api", ""));
-    console.log({ newSocket });
+    console.log({ newSocket, url: environment.apiURL?.replace("/api", "") });
     setSocket(newSocket);
     return () => {
       newSocket.close();

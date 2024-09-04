@@ -230,7 +230,7 @@ const AgentsMain = () => {
       .then(() => {
         setLoadingSave(false);
         message.success(`Agent ${agent ? "updated" : "created"} successfully!`);
-        refetch({ pageNo: 1, pageSize: 50 });
+        refetch({ current: 1, pageSize: 50 });
         onCancel();
       })
       .catch((error) => {
