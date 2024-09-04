@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Checkbox, Flex, Form, Input, message, Modal, Radio, Tabs } from "antd";
+import {
+  Checkbox,
+  DatePicker,
+  Flex,
+  Form,
+  Input,
+  message,
+  Modal,
+  Radio,
+  Tabs,
+} from "antd";
 import { useForm, useWatch } from "antd/lib/form/Form";
 import MaskedInputWrapper from "../input/MaskedInputWrapper";
 import AgentPlaygroundConversation from "./AgentPlayground.Conversation";
@@ -8,6 +18,7 @@ import { smsCrud } from "@/utils/crud/sms.crud";
 import { getErrorMsg } from "@/utils/helpers";
 import FormItem from "antd/es/form/FormItem";
 import { IConversation } from "@/components/sms/SMS.Dashboard";
+import dayjs from "dayjs";
 
 const AgentPlayground = ({
   playground,
@@ -30,6 +41,7 @@ const AgentPlayground = ({
         .createTestConversation({
           ...values,
           agentId: playground.id,
+          lastBooking: dayjs(values.lastBooking).format("YYYY-MM-DD"),
         })
         .then((res) => {
           setLoading(false);
@@ -135,6 +147,18 @@ const AgentPlayground = ({
                   ]}
                 >
                   <Input size="large" placeholder="Year / Make / Model" />
+                </FormItem>
+                <FormItem
+                  name={"lastBooking"}
+                  label="Last Service Date"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input last service date!",
+                    },
+                  ]}
+                >
+                  <DatePicker size="large" style={{ width: "100%" }} />
                 </FormItem>
 
                 {mode === "sms" ? (

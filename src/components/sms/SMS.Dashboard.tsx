@@ -207,21 +207,9 @@ const SmsDashboard = () => {
           dst: Number(sanitizePhoneNumber(details?.contact as string)),
           conversationId: _c?.id,
         })
-        .then((res) => {
+        .then(() => {
           message.success(`Message sent successfully!`);
           disableLoading("message");
-          setMessages((prevState) => [
-            {
-              id: res.data.data?.id || Math.random(),
-              message: values.message,
-              date: new Date(),
-              from: environment.did,
-              to: details?.contact as string,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            },
-            ...prevState,
-          ]);
           form.resetFields();
         })
         .catch((err) => {
@@ -463,7 +451,13 @@ const SmsDashboard = () => {
                 {conversations.map((conv) => (
                   <div
                     className={`sms_sider_item ${
-                      conv.contact === details?.contact ? "active" : ""
+                      conv?.id
+                        ? conv.id === details?.id
+                          ? "active"
+                          : ""
+                        : conv.contact === details?.contact
+                          ? "active"
+                          : ""
                     }`}
                     onClick={onClick(conv)}
                     key={conv.id}
@@ -561,7 +555,7 @@ const SmsDashboard = () => {
               )}
 
               <Row
-                className="message-input-container"
+                className="message-input-container pl-1 pb-1"
                 style={{ position: "unset" }}
               >
                 <Form
