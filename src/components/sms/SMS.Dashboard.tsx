@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Badge,
   Button,
@@ -138,7 +138,7 @@ const SmsDashboard = () => {
           message.error(getErrorMsg(error, "Could not get messages!"));
         });
     }
-  }, [details]);
+  }, [details?.id]);
   const fetchData = (params: any, append = false) => {
     smsCrud
       .getConversationList({
@@ -163,11 +163,17 @@ const SmsDashboard = () => {
       })
       .finally(() => disableLoading("conversation"));
   };
+  const savedConversations = useMemo(
+    () => conversations?.filter((c) => c.id),
+    [conversations?.filter((c) => c.id)],
+  );
   useEffect(() => {
-    if (conversations?.length) {
-      socket?.emit("join-room", { roomId: conversations?.map((d) => d.id) });
+    if (savedConversations?.length) {
+      socket?.emit("join-room", {
+        roomId: savedConversations?.map((d) => d.id),
+      });
     }
-  }, [conversations, socket]);
+  }, [savedConversations, socket]);
   useEffect(() => {
     enableLoading("conversation");
     fetchData({ perPage: 50, pageNo: 1 });
@@ -187,6 +193,7 @@ const SmsDashboard = () => {
         const _data = res.data.data;
         _c = _data;
         setDetails((prevState) => ({ ..._data, ...prevState }));
+
         fetchData({ perPage: 50, pageNo: 1 });
       } else if (active === "1" && details?.id) {
         await smsCrud.updateConversation({
@@ -207,8 +214,22 @@ const SmsDashboard = () => {
           dst: Number(sanitizePhoneNumber(details?.contact as string)),
           conversationId: _c?.id,
         })
-        .then(() => {
+        .then((res) => {
           message.success(`Message sent successfully!`);
+          if (!details?.id) {
+            setMessages((prevState) => [
+              {
+                id: res?.data?.data?.id || Math.random(),
+                from: `${environment.did}`,
+                to: `${details?.contact}`,
+                message: values.message,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              },
+              ...prevState,
+            ]);
+          }
+
           disableLoading("message");
           form.resetFields();
         })
@@ -325,6 +346,7 @@ const SmsDashboard = () => {
     setSelectedConversation(null);
   };
   const onStartNewConversation = (_data: any) => {
+    setMessages([]);
     setConversations((prevState) => [_data, ...prevState]);
     setDetails(_data);
     setSelectedConversation({ ..._data, contact: _data.contact });
