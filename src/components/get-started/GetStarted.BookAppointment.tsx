@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { Button, Checkbox, Col, Form, Input, message, Row } from "antd";
 import { FormItem, Text } from "@/components/antd-sub-components";
@@ -16,10 +16,12 @@ const GetStartedBookAppointment = ({
   next,
   customer,
   setCustomer,
+  sendHeight,
 }: {
   next: () => void;
   customer: ICustomer | null;
   setCustomer: (customer: ICustomer) => void;
+  sendHeight: () => void;
 }) => {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(0);
@@ -32,6 +34,24 @@ const GetStartedBookAppointment = ({
   const customerAddOns: {
     [key: number]: number;
   } = Form.useWatch("customerAddOns", form);
+  useEffect(() => {
+    if (customer) {
+      form1.setFieldsValue({
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        email: customer.email,
+        address: customer.address,
+        phone: customer.phone,
+        city: customer.city,
+        state: customer.state,
+        zipCode: customer.zipCode,
+        country: customer.country,
+        preferences: {
+          appointment: customer.preferences?.type === PreferencesTypes.SMS,
+        },
+      });
+    }
+  }, [step]);
   const onFinish = (values: any) => {
     setLoading(true);
     customerCrud[step === 0 ? "create" : "update"]({
@@ -59,6 +79,7 @@ const GetStartedBookAppointment = ({
         });
         if (step === 0) {
           setStep(1);
+          sendHeight();
           return;
         }
         next();

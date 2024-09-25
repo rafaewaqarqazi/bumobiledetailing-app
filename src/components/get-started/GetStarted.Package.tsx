@@ -103,10 +103,19 @@ const GetStartedPackage = ({
                 <Popover
                   content={
                     <Text className="whitespace-pre">
-                      {servicePackage?.package?.includes}
+                      {servicePackage?.package?.includes
+                        ?.split("\n")
+                        ?.filter(Boolean)
+                        ?.slice(1)
+                        ?.join(`\n`)}
                     </Text>
                   }
-                  title={servicePackage?.package?.displayName}
+                  title={
+                    servicePackage?.package?.includes
+                      ?.split("\n")
+                      ?.filter(Boolean)?.[0] ||
+                    servicePackage?.package?.displayName
+                  }
                 >
                   <Button
                     className="!absolute top-0 right-0"

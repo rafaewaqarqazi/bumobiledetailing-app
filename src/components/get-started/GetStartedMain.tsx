@@ -28,6 +28,7 @@ import { usePathname, useRouter } from "next/navigation";
 import ReactGA from "react-ga4";
 import { environment } from "@/utils/config";
 import { couponCrud, ICoupon } from "@/utils/crud/coupon.crud";
+import { HandThumbUpIcon } from "@heroicons/react/24/outline";
 
 const GetStartedMain = () => {
   const [form] = Form.useForm();
@@ -207,18 +208,37 @@ const GetStartedMain = () => {
   };
   return (
     <Card bordered={false} className="w-full sm:!p-6 !shadow-2xl rounded-2xl">
+      {step !== 6 && (
+        <Paragraph strong className="text-justify">
+          Premium Mobile Detailing Packages Tailored to Your Vehicle{`'`}s Needs
+        </Paragraph>
+      )}
+      {step === 1 && (
+        <>
+          <Paragraph>
+            <Text strong>Special Promotion: </Text>
+            <Text>15% off your detailing appointment.</Text>
+          </Paragraph>
+          <Paragraph>
+            <Text strong>Free:</Text> <Text>12 point car checkup</Text>
+          </Paragraph>
+        </>
+      )}
       {step > 1 && (
         <Button icon={<ArrowLeftOutlined />} type="text" onClick={back} />
       )}
       {(step < 4 || step === 6) && (
         <>
-          <Title level={2} className="!font-semibold !mt-0 !text-4xl">
+          <Title
+            level={3}
+            className="!font-semibold !mt-0 !text-3xl text-center"
+          >
             {title}
           </Title>
           <Title
             level={5}
             type="secondary"
-            className="!mt-0 !mb-12 !font-normal"
+            className="!mt-0 !mb-12 !font-normal text-center"
           >
             {subtitle}
           </Title>
@@ -262,6 +282,7 @@ const GetStartedMain = () => {
             next={next}
             customer={customer}
             setCustomer={setCustomer}
+            sendHeight={sendHeight}
           />
         )}
         {step === 7 && (
@@ -271,9 +292,12 @@ const GetStartedMain = () => {
               code={code as ICoupon}
               customer={customer}
             />
-            <Paragraph type="secondary" className="!my-4 !font-bold">
-              100% Satisfaction Guaranteed
-            </Paragraph>
+            <Flex gap={8}>
+              <HandThumbUpIcon className="text-secondary" width={18} />{" "}
+              <Paragraph type="secondary" className="!my-4 !font-bold">
+                100% Satisfaction Guaranteed
+              </Paragraph>
+            </Flex>
             <GetStartedTermsOfService />
             {code && code.code && (
               <Flex justify="space-between" className="mb-4">

@@ -54,9 +54,8 @@ const Pricing = () => {
         {selectedService?.servicePackages
           ?.sort((a: IServicePackage, b: IServicePackage) => a.rank - b.rank)
           ?.map((_package) => {
-            const description = _package.package?.description
-              ?.split("\n")
-              .filter(Boolean);
+            const description =
+              _package.package?.includes?.split("\n")?.filter(Boolean) || [];
             const descriptionLength = description?.length || 0;
             const half = Math.ceil(descriptionLength / 2);
             return (
@@ -87,6 +86,7 @@ const Pricing = () => {
                         ))}
                       </Col>
                       <Col xs={24} sm={12}>
+                        <Paragraph>&nbsp;</Paragraph>
                         {description.slice(half).map((line) => (
                           <Paragraph key={line}>{line}</Paragraph>
                         ))}

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import { Button, Card, Divider, Flex, Form, Popover } from "antd";
 import Image from "next/image";
-import { Text, Title } from "@/components/antd-sub-components";
+import { Paragraph, Text, Title } from "@/components/antd-sub-components";
 import {
   currencyFormatter,
   getGAAddOns,
@@ -131,9 +131,18 @@ const GetStartedSummary = ({
           </div>
           <Popover
             content={
-              <Text className="whitespace-pre">{_package?.includes}</Text>
+              <Text className="whitespace-pre">
+                {_package?.includes
+                  ?.split("\n")
+                  ?.filter(Boolean)
+                  ?.slice(1)
+                  ?.join(`\n`)}
+              </Text>
             }
-            title={_package?.displayName}
+            title={
+              _package?.includes?.split("\n")?.filter(Boolean)?.[0] ||
+              _package?.displayName
+            }
           >
             <Button
               className="!absolute top-0 right-0"
@@ -148,40 +157,46 @@ const GetStartedSummary = ({
           </Popover>
         </Flex>
         <Divider />
-        {customerAddOns &&
-          Object.keys(customerAddOns).map((key) => {
-            const addOn = addOns?.find((a) => a.id === +key);
-            const isPackageAddOn = _package?.packageAddOns?.find(
-              (pa) => pa.addOn?.id === +key,
-            );
-            const hasQuantity = isPackageAddOn
-              ? true
-              : customerAddOns[+key] > 0;
-            return (
-              addOn &&
-              hasQuantity && (
-                <Flex gap={16} align="center" className="pl-10 mb-2" key={key}>
-                  {/*<div>*/}
-                  {/*  <Image*/}
-                  {/*    src={addOn?.image}*/}
-                  {/*    alt={addOn?.name}*/}
-                  {/*    width={48}*/}
-                  {/*    height={48}*/}
-                  {/*    className="rounded-2xl"*/}
-                  {/*  />*/}
-                  {/*</div>*/}
-                  <div className="flex-grow">
-                    <Title level={5} className="!mt-0">
-                      {addOn?.name}
-                    </Title>
-                  </div>
-                  <div className="w-8 h-8 bg-bodyBG rounded-lg flex items-center justify-center !font-medium">
-                    {customerAddOns[+key]}
-                  </div>
-                </Flex>
-              )
-            );
-          })}
+        {customerAddOns && (
+          <>
+            <Paragraph strong>Service Includes:</Paragraph>
+            <ul>
+              {Object.keys(customerAddOns).map((key) => {
+                const addOn = addOns?.find((a) => a.id === +key);
+                const isPackageAddOn = _package?.packageAddOns?.find(
+                  (pa) => pa.addOn?.id === +key,
+                );
+                const hasQuantity = isPackageAddOn
+                  ? true
+                  : customerAddOns[+key] > 0;
+                return (
+                  addOn &&
+                  hasQuantity && (
+                    <li key={key}>
+                      {/*<div>*/}
+                      {/*  <Image*/}
+                      {/*    src={addOn?.image}*/}
+                      {/*    alt={addOn?.name}*/}
+                      {/*    width={48}*/}
+                      {/*    height={48}*/}
+                      {/*    className="rounded-2xl"*/}
+                      {/*  />*/}
+                      {/*</div>*/}
+                      {/*<div className="flex-grow">*/}
+                      <Paragraph className="!mt-0 !mb-1 font-bold">
+                        {addOn?.name}
+                      </Paragraph>
+                      {/*</div>*/}
+                      {/*<div className="w-8 h-8 bg-bodyBG rounded-lg flex items-center justify-center !font-medium">*/}
+                      {/*  {customerAddOns[+key]}*/}
+                      {/*</div>*/}
+                    </li>
+                  )
+                );
+              })}
+            </ul>
+          </>
+        )}
         <Divider />
         <Flex gap={8} className="mb-4" align="center">
           <ClockCircleOutlined className="text-xl" />

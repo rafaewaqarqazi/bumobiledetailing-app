@@ -148,9 +148,18 @@ const GetStartedTimeslot = ({
             </div>
             <Popover
               content={
-                <Text className="whitespace-pre">{_package?.includes}</Text>
+                <Text className="whitespace-pre">
+                  {_package?.includes
+                    ?.split("\n")
+                    ?.filter(Boolean)
+                    ?.slice(1)
+                    ?.join(`\n`)}
+                </Text>
               }
-              title={_package?.displayName}
+              title={
+                _package?.includes?.split("\n")?.filter(Boolean)?.[0] ||
+                _package?.displayName
+              }
             >
               <Button
                 className="!absolute top-0 right-0"
