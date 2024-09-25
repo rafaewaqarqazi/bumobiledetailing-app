@@ -160,16 +160,16 @@ const GetStartedSummary = ({
             return (
               addOn &&
               hasQuantity && (
-                <Flex gap={16} align="center" className="pl-10" key={key}>
-                  <div>
-                    <Image
-                      src={addOn?.image}
-                      alt={addOn?.name}
-                      width={48}
-                      height={48}
-                      className="rounded-2xl"
-                    />
-                  </div>
+                <Flex gap={16} align="center" className="pl-10 mb-2" key={key}>
+                  {/*<div>*/}
+                  {/*  <Image*/}
+                  {/*    src={addOn?.image}*/}
+                  {/*    alt={addOn?.name}*/}
+                  {/*    width={48}*/}
+                  {/*    height={48}*/}
+                  {/*    className="rounded-2xl"*/}
+                  {/*  />*/}
+                  {/*</div>*/}
                   <div className="flex-grow">
                     <Title level={5} className="!mt-0">
                       {addOn?.name}

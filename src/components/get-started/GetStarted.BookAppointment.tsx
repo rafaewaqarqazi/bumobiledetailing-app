@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "antd/es/form/Form";
-import { Button, Checkbox, Col, Form, Input, Row } from "antd";
+import { Button, Checkbox, Col, Form, Input, message, Row } from "antd";
 import { FormItem, Text } from "@/components/antd-sub-components";
 import MaskedInputWrapper from "@/components/input/MaskedInputWrapper";
 import { customerCrud, ICustomer } from "@/utils/crud/customer.crud";
@@ -10,6 +10,7 @@ import { customerServiceCrud } from "@/utils/crud/customerService.crud";
 import { IPackage } from "@/utils/crud/package.crud";
 import { IService } from "@/utils/crud/service.crud";
 import { IVehicle } from "@/utils/crud/vehicle.crud";
+import { getErrorMsg } from "@/utils/helpers";
 
 const GetStartedBookAppointment = ({
   next,
@@ -63,6 +64,7 @@ const GetStartedBookAppointment = ({
         next();
       })
       .catch((error) => {
+        message.error(getErrorMsg(error));
         console.log(error);
         setLoading(false);
       });
