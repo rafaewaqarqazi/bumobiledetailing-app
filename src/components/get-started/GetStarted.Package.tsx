@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Card, Col, Flex, Form, Popover, Row } from "antd";
-import { Text, Title } from "@/components/antd-sub-components";
+import { Paragraph, Text, Title } from "@/components/antd-sub-components";
 import Image from "next/image";
 import { currencyFormatter, getTotalPrice } from "@/utils/helpers";
 import { IPackage, IPackageAddOn } from "@/utils/crud/package.crud";
@@ -32,27 +32,31 @@ const GetStartedPackage = ({
         addOns[addOn.addOn.id] = 1;
       });
     form.setFieldValue("customerAddOns", addOns);
-    customerServiceCrud
-      .create({
-        customer: customer?.id,
-        service: service?.id,
-        vehicle: vehicle?.id,
-        package: _package?.id,
-        customerAddOns: addOns,
-        totalPrice: `${getTotalPrice({
-          package: _package,
+    if (customer?.id) {
+      customerServiceCrud
+        .create({
+          customer: customer?.id,
+          service: service?.id,
+          vehicle: vehicle?.id,
+          package: _package?.id,
           customerAddOns: addOns,
-          addOns: _package.packageAddOns?.map(
-            (packageAddOn) => packageAddOn.addOn,
-          ),
-        })}`,
-      })
-      .then(() => {
-        next();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+          totalPrice: `${getTotalPrice({
+            package: _package,
+            customerAddOns: addOns,
+            addOns: _package.packageAddOns?.map(
+              (packageAddOn) => packageAddOn.addOn,
+            ),
+          })}`,
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    next();
+  };
+
+  const getDiscountPrice = (price: number) => {
+    return (Number(price) * 15) / 100;
   };
   return (
     <Row gutter={[16, 16]}>
@@ -83,13 +87,23 @@ const GetStartedPackage = ({
                     type="secondary"
                     className="!mt-0 !mb-0 !font-extrabold !text-colorGrey"
                   >
-                    {currencyFormatter.format(servicePackage?.package?.price)}
+                    {currencyFormatter.format(
+                      servicePackage?.package?.price -
+                        getDiscountPrice(servicePackage?.package?.price),
+                    )}
+                    {getDiscountPrice(servicePackage?.package?.price) > 0 && (
+                      <Text delete className="ml-2">
+                        {currencyFormatter.format(
+                          getDiscountPrice(servicePackage?.package?.price),
+                        )}
+                      </Text>
+                    )}
                   </Title>
                 </div>
                 <Popover
                   content={
                     <Text className="whitespace-pre">
-                      {servicePackage?.package?.description}
+                      {servicePackage?.package?.includes}
                     </Text>
                   }
                   title={servicePackage?.package?.displayName}
@@ -106,6 +120,9 @@ const GetStartedPackage = ({
                   />
                 </Popover>
               </Flex>
+              <Paragraph className="text-justify">
+                {servicePackage.package.description}
+              </Paragraph>
             </Card>
           </Col>
         ))}

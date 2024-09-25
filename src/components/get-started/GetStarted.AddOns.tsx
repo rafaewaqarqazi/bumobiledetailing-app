@@ -100,22 +100,25 @@ const GetStartedAddOns = ({
         _addOns[+key] = customerAddOns[+key];
       }
     });
-    customerServiceCrud
-      .create({
-        customer: customer?.id,
-        service: service?.id,
-        vehicle: vehicle?.id,
-        package: _package?.id,
-        customerAddOns: _addOns,
-        totalPrice: `${totalPrice}`,
-      })
-      .then(() => {
-        next();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    if (customer?.id) {
+      customerServiceCrud
+        .create({
+          customer: customer?.id,
+          service: service?.id,
+          vehicle: vehicle?.id,
+          package: _package?.id,
+          customerAddOns: _addOns,
+          totalPrice: `${totalPrice}`,
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    next();
   };
+  const discountAmount = useMemo(() => {
+    return (totalPrice * 15) / 100;
+  }, [totalPrice]);
   return (
     _package && (
       <div className="mt-4">
@@ -139,12 +142,17 @@ const GetStartedAddOns = ({
                 type="secondary"
                 className="!mt-0 !mb-0 !font-extrabold !text-colorGrey"
               >
-                {currencyFormatter.format(_package?.price)}
+                {currencyFormatter.format(totalPrice - discountAmount)}
+                {discountAmount > 0 && (
+                  <Text delete className="ml-2">
+                    {currencyFormatter.format(totalPrice)}
+                  </Text>
+                )}
               </Title>
             </div>
             <Popover
               content={
-                <Text className="whitespace-pre">{_package?.description}</Text>
+                <Text className="whitespace-pre">{_package?.includes}</Text>
               }
               title={_package?.displayName}
             >

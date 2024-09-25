@@ -1,7 +1,12 @@
 "use client";
 import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { Button, Card, Col, Flex, Form, Input, message, Row } from "antd";
-import { FormItem, Text, Title } from "@/components/antd-sub-components";
+import {
+  FormItem,
+  Paragraph,
+  Text,
+  Title,
+} from "@/components/antd-sub-components";
 import GetStartedBookAppointment from "@/components/get-started/GetStarted.BookAppointment";
 import { ICustomer } from "@/utils/crud/customer.crud";
 import GetStartedCar from "@/components/get-started/GetStarted.Car";
@@ -31,7 +36,10 @@ const GetStartedMain = () => {
   const [customer, setCustomer] = useState<ICustomer | null>(null);
   const [visible, setVisible] = useState(false);
   const [couponText, setCouponText] = useState("");
-  const [code, setCode] = useState<ICoupon | null>(null);
+  const [code, setCode] = useState<Partial<ICoupon> | null>({
+    code: "LABOR",
+    discountPercentage: "15",
+  });
   const [loadingCoupon, setLoadingCoupon] = useState(false);
   const { addOns } = useAddOns({});
   const router = useRouter();
@@ -58,13 +66,13 @@ const GetStartedMain = () => {
   const title = useMemo(() => {
     switch (step) {
       case 1:
-        return "Book Appointment";
-      case 2:
         return "Choose Car";
-      case 3:
+      case 2:
         return "Choose service";
-      case 4:
+      case 3:
         return "Choose package";
+      case 6:
+        return "Schedule Appointment";
       default:
         return "Book Appointment";
     }
@@ -72,13 +80,13 @@ const GetStartedMain = () => {
   const subtitle = useMemo(() => {
     switch (step) {
       case 1:
-        return "Book your appointment for car detailing.";
-      case 2:
         return "Which car do you have?";
-      case 3:
+      case 2:
         return "Which service would you like to choose?";
-      case 4:
+      case 3:
         return "Which package would you prefer?";
+      case 6:
+        return "Premium Mobile Detailing Packages Tailored to Your Vehicle's Needs";
       default:
         return "Book Appointment";
     }
@@ -202,7 +210,7 @@ const GetStartedMain = () => {
       {step > 1 && (
         <Button icon={<ArrowLeftOutlined />} type="text" onClick={back} />
       )}
-      {step < 5 && (
+      {(step < 4 || step === 6) && (
         <>
           <Title level={2} className="!font-semibold !mt-0 !text-4xl">
             {title}
@@ -217,11 +225,8 @@ const GetStartedMain = () => {
         </>
       )}
 
-      {step === 1 && (
-        <GetStartedBookAppointment next={next} setCustomer={setCustomer} />
-      )}
       <Form layout="vertical" size="small" form={form} onFinish={onFinish}>
-        <FormItem name="car" className={`${step !== 2 ? "hidden" : ""} !mb-0`}>
+        <FormItem name="car" className={`${step !== 1 ? "hidden" : ""} !mb-0`}>
           <GetStartedCar
             next={next}
             customer={customer}
@@ -230,35 +235,45 @@ const GetStartedMain = () => {
         </FormItem>
         <FormItem
           name="service"
-          className={`${step !== 3 ? "hidden" : ""} !mb-0`}
+          className={`${step !== 2 ? "hidden" : ""} !mb-0`}
         >
           <GetStartedService next={next} customer={customer} />
         </FormItem>
         <FormItem
           name="package"
-          className={`${step !== 4 ? "hidden" : ""} !mb-0`}
+          className={`${step !== 3 ? "hidden" : ""} !mb-0`}
         >
           <GetStartedPackage next={next} customer={customer} />
         </FormItem>
         <FormItem
           name="customerAddOns"
-          className={`${step !== 5 ? "hidden" : ""} !mb-0`}
+          className={`${step !== 4 ? "hidden" : ""} !mb-0`}
         >
           <GetStartedAddOns next={next} addOns={addOns} customer={customer} />
         </FormItem>
         <FormItem
           name="timeslot"
-          className={`${step !== 6 ? "hidden" : ""} !mb-0`}
+          className={`${step !== 5 ? "hidden" : ""} !mb-0`}
         >
           <GetStartedTimeslot next={next} addOns={addOns} customer={customer} />
         </FormItem>
+        {step === 6 && (
+          <GetStartedBookAppointment
+            next={next}
+            customer={customer}
+            setCustomer={setCustomer}
+          />
+        )}
         {step === 7 && (
           <>
             <GetStartedSummary
               addOns={addOns}
-              code={code}
+              code={code as ICoupon}
               customer={customer}
             />
+            <Paragraph type="secondary" className="!my-4 !font-bold">
+              100% Satisfaction Guaranteed
+            </Paragraph>
             <GetStartedTermsOfService />
             {code && code.code && (
               <Flex justify="space-between" className="mb-4">

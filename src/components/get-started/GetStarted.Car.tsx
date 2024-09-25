@@ -29,18 +29,23 @@ const GetStartedCar = ({
       .validateFields([["car", "info"]])
       .then(() => {
         const carInfo = car?.info.split("/");
-        vehicleCrud
-          .create({
-            type: car?.type,
-            make: carInfo[1],
-            model: carInfo[2],
-            year: carInfo[0],
-            customer: customer?.id,
-          })
-          .then((res) => {
-            form.setFieldValue(["car", "id"], res.data.data.id);
-            next();
-          });
+        if (customer?.id) {
+          vehicleCrud
+            .create({
+              type: car?.type,
+              make: carInfo[1],
+              model: carInfo[2],
+              year: carInfo[0],
+              customer: customer?.id,
+            })
+            .then((res) => {
+              form.setFieldValue(["car", "id"], res.data.data.id);
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }
+        next();
       })
       .catch((err) => {
         console.error(err);

@@ -17,7 +17,6 @@ import { addOnCrud } from "@/utils/crud/addOn.crud";
 import { getErrorMsg } from "@/utils/helpers";
 import { useAddOnCategories } from "@/hooks/addOn.category.hooks";
 import FormUploadFile from "@/components/input/FormUploadFile";
-import { UploadOutlined } from "@ant-design/icons";
 
 const AddOnForm = () => {
   const { addOn } = useAddOn();
@@ -30,6 +29,13 @@ const AddOnForm = () => {
       form.setFieldsValue({
         ...addOn,
         category: addOn.category?.id,
+        image: {
+          uid: addOn.image,
+          name: addOn.image,
+          status: "done",
+          url: addOn.image,
+          response: addOn.image,
+        },
       });
     }
   }, [addOn]);
@@ -38,7 +44,10 @@ const AddOnForm = () => {
     if (addOn?.id) {
       values.id = addOn.id;
     }
-    addOnCrud[addOn?.id ? "update" : "create"](values)
+    addOnCrud[addOn?.id ? "update" : "create"]({
+      ...values,
+      image: values.image?.response,
+    })
       .then(() => {
         setLoading(false);
         message.success(
@@ -137,9 +146,7 @@ const AddOnForm = () => {
             },
           ]}
         >
-          <Button icon={<UploadOutlined />} block>
-            Click to Upload
-          </Button>
+          + Upload
         </FormUploadFile>
 
         <Row justify="end">

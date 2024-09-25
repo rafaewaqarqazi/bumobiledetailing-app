@@ -140,6 +140,7 @@ const Bookings = () => {
       {
         title: "Actions",
         align: "right",
+        fixed: "right",
         render: (record: any) => (
           <Dropdown
             menu={{

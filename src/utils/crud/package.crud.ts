@@ -8,6 +8,7 @@ export interface IPackage {
   name: string;
   displayName: string;
   description: string;
+  includes: string;
   price: number;
   isPopular: boolean;
   image: string;

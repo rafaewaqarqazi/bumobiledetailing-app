@@ -8,7 +8,6 @@ import { IPackageAddOn, packageCrud } from "@/utils/crud/package.crud";
 import { useRouter } from "next/navigation";
 import { getErrorMsg } from "@/utils/helpers";
 import FormUploadFile from "@/components/input/FormUploadFile";
-import { UploadOutlined } from "@ant-design/icons";
 import type { DragEndEvent } from "@dnd-kit/core";
 import {
   DndContext,
@@ -40,6 +39,13 @@ const PackageForm = () => {
           id: addOn.addOn.id,
           rank: addOn.rank,
         })),
+        image: {
+          uid: packageData.image,
+          name: packageData.image,
+          status: "done",
+          url: packageData.image,
+          response: packageData.image,
+        },
       });
     }
   }, [packageData]);
@@ -54,6 +60,7 @@ const PackageForm = () => {
         addOn: p.id,
         rank: p.rank,
       })),
+      image: values.image?.response,
     })
       .then(() => {
         setLoading(false);
@@ -148,6 +155,14 @@ const PackageForm = () => {
             }}
           />
         </FormItem>
+        <FormItem name="includes" label="Includes">
+          <TextArea
+            autoSize={{
+              minRows: 3,
+              maxRows: 5,
+            }}
+          />
+        </FormItem>
         <FormItem
           name="price"
           label="Price"
@@ -216,9 +231,7 @@ const PackageForm = () => {
             },
           ]}
         >
-          <Button icon={<UploadOutlined />} block>
-            Click to Upload
-          </Button>
+          + Upload
         </FormUploadFile>
         <Row justify="end">
           <Button type="primary" htmlType="submit" loading={loading}>

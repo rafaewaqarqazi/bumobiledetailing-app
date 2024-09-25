@@ -20,18 +20,19 @@ const GetStartedService = ({
   const { services } = useServices({ withAllRelations: true });
   const onClick = (_service: IService) => () => {
     form.setFieldValue("service", _service);
-    customerServiceCrud
-      .create({
-        customer: customer?.id,
-        service: _service?.id,
-        vehicle: vehicle?.id,
-      })
-      .then(() => {
-        next();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    if (customer?.id) {
+      customerServiceCrud
+        .create({
+          customer: customer?.id,
+          service: _service?.id,
+          vehicle: vehicle?.id,
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
+    next();
   };
   return (
     <Row gutter={[16, 16]}>

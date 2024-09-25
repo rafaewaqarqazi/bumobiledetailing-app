@@ -131,7 +131,7 @@ const GetStartedSummary = ({
           </div>
           <Popover
             content={
-              <Text className="whitespace-pre">{_package?.description}</Text>
+              <Text className="whitespace-pre">{_package?.includes}</Text>
             }
             title={_package?.displayName}
           >

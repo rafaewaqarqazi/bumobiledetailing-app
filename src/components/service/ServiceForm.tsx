@@ -24,7 +24,7 @@ import { IServicePackage, serviceCrud } from "@/utils/crud/service.crud";
 import { currencyFormatter, getErrorMsg } from "@/utils/helpers";
 import { usePackages } from "@/hooks/package.hooks";
 import FormUploadFile from "@/components/input/FormUploadFile";
-import { MoreOutlined, UploadOutlined } from "@ant-design/icons";
+import { MoreOutlined } from "@ant-design/icons";
 import { IPackage } from "@/utils/crud/package.crud";
 import {
   DndContext,
@@ -62,6 +62,13 @@ const ServiceForm = () => {
         })),
         isPopular: service.servicePackages?.find((sp) => sp.isPopular)?.package
           ?.id,
+        image: {
+          uid: service.image,
+          name: service.image,
+          status: "done",
+          url: service.image,
+          response: service.image,
+        },
       });
     }
   }, [service]);
@@ -79,6 +86,7 @@ const ServiceForm = () => {
         isPopular: _isPopular === sp.id,
         rank: sp.rank,
       })),
+      image: values.image?.response,
     })
       .then(() => {
         setLoading(false);
@@ -262,9 +270,7 @@ const ServiceForm = () => {
             },
           ]}
         >
-          <Button icon={<UploadOutlined />} block>
-            Click to Upload
-          </Button>
+          + Upload
         </FormUploadFile>
 
         <Row justify="end">
